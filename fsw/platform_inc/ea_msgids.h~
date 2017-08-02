@@ -1,0 +1,10 @@
+#ifndef EA_MSGIDS_H
+#define EA_MSGIDS_H
+
+#include "msg_ids.h"
+
+#define EA_HK_TLM_MID    0x0c29 TODO
+#define EA_SEND_HK_MID   0x1c2a
+#define EA_CMD_MID       0x1c2b
+
+#endif

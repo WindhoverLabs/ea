@@ -1,0 +1,11 @@
+
+add_airliner_app_def(ea
+    FILE EA
+    SOURCES
+        ${CMAKE_CURRENT_SOURCE_DIR}/../src/ea_app.c
+		${CMAKE_CURRENT_SOURCE_DIR}/../src/ea_cmds.c
+   
+    INCLUDES
+        ${CMAKE_CURRENT_SOURCE_DIR}/../src/
+)
+

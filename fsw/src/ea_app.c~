@@ -1,0 +1,215 @@
+/*==============================================================================
+Copyright (c) 2015, Windhover Labs
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+* Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
+
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+
+* Neither the name of CmdIn nor the names of its
+  contributors may be used to endorse or promote products derived from
+  this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+ea_app.c
+*/
+
+#include "ea_app.h"
+#include "ea_cmds.h"
+#include "ea_msgids.h"
+#include "ea_perfids.h"
+#include <string.h>
+
+EA_AppData_t EA_AppData;
+
+void EA_AppMain(void)
+{
+    int32 Status = CFE_SUCCESS;
+   
+    /* Register the application with Executive Services */
+    CFE_ES_RegisterApp();
+
+    /* Create the first Performance Log entry */
+    CFE_ES_PerfLogEntry(EA_APPMAIN_PERF_ID); 
+   
+    /* Perform application specific initialization */
+    Status = EA_AppInit();
+   
+    if (Status != CFE_SUCCESS)
+    {
+        EA_AppData.RunStatus = CFE_ES_APP_ERROR;
+    }
+   
+   /* Application main loop */
+    while(CFE_ES_RunLoop(&EA_AppData.RunStatus) == TRUE)
+    {
+        /* Performance Log exit stamp */
+        CFE_ES_PerfLogExit(EA_APPMAIN_PERF_ID);
+        
+        /* Wait for the next Software Bus message */
+        Status = CFE_SB_RcvMsg(&EA_AppData.MsgPtr, EA_AppData.CmdPipe, EA_SB_TIMEOUT);
+
+        /* Performance Log Entry Stamp */
+        CFE_ES_PerfLogEntry(EA_APPMAIN_PERF_ID);
+
+        if (Status == CFE_SUCCESS)
+        {
+            /*
+             * Process Software Bus message. If there are fatal errors
+             * in command processing the command can alter the global
+             * RunStatus variable to exit the main event loop.
+             */
+            EA_AppPipe(EA_AppData.MsgPtr);
+        }
+        else
+        {
+           /* 
+            * This is an example of exiting on an error.
+            * Note that a SB read error is not always going to
+            * result in an app quitting.
+            */
+            CFE_EVS_SendEvent(EA_PIPE_ERR_EID, CFE_EVS_ERROR, \
+                              "SB Pipe Read Error, EA App will exit. RC = 0x%08X", (unsigned int)Status);
+
+            EA_AppData.RunStatus = CFE_ES_APP_ERROR;
+        }
+
+   } /* end CFS_ES_RunLoop while */
+   
+   /* Performance Log exit stamp */
+   CFE_ES_PerfLogExit(EA_APPMAIN_PERF_ID);
+   
+   /* Exit the application */
+   CFE_ES_ExitApp(EA_AppData.RunStatus);
+} /* end EA_AppMain */
+
+
+int32 EA_AppInit(void)
+{
+    int32  Status = CFE_SUCCESS;
+
+    /* Setup the RunStatus variable */
+    EA_AppData.RunStatus = CFE_ES_APP_RUN;
+
+    /* Initialize app command execution counters */
+    EA_AppData.CmdCounter = 0;
+    EA_AppData.ErrCounter = 0;
+
+    /* Initialize app configuration data */
+    strcpy(EA_AppData.PipeName, EA_SB_PIPE_1_NAME);
+
+    EA_AppData.PipeDepth = EA_PIPE_DEPTH;
+
+    /* Register event filter table */
+    Status = CFE_EVS_Register(NULL, 0, CFE_EVS_BINARY_FILTER);
+
+    if (Status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("EA App: Error Registering Events, RC = 0x%08X\n", (unsigned int)Status);
+        return (Status);
+    }
+    /* Initialize housekeeping packet (clear user data area) */
+    CFE_SB_InitMsg(&EA_AppData.HkPacket, EA_HK_TLM_MID, sizeof(EA_HkPacket_t), TRUE);
+
+    /* Create Software Bus message pipe */
+    Status = CFE_SB_CreatePipe(&EA_AppData.CmdPipe, EA_AppData.PipeDepth, EA_AppData.PipeName);
+    
+    if (Status != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(EA_PIPE_ERR_EID, CFE_EVS_ERROR, \
+                              "SB Pipe Creation Error, EA App will exit. RC = 0x%08X", (unsigned int)Status);
+    return (Status);
+    }
+    
+    /* Subscribe to Housekeeping request commands */
+    Status = CFE_SB_Subscribe(EA_SEND_HK_MID, EA_AppData.CmdPipe);
+
+    if (Status != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(EA_PIPE_ERR_EID, CFE_EVS_ERROR, \
+                            "Error Subscribing to HK Request, EA App will exit. RC = 0x%08X", (unsigned int)Status);
+        return (Status);
+    }
+    
+    /* Subscribe to EA ground command packets */
+    Status = CFE_SB_Subscribe(EA_CMD_MID, EA_AppData.CmdPipe);
+    if (Status != CFE_SUCCESS)
+    {
+       CFE_EVS_SendEvent(EA_PIPE_ERR_EID, CFE_EVS_ERROR, \
+                            "Error Subscribing to EA Command, EA App will exit. RC = 0x%08X", (unsigned int)Status);
+       return (Status);
+    }
+    
+    /* Application startup event message */
+    CFE_EVS_SendEvent(EA_INIT_INF_EID, CFE_EVS_INFORMATION, "EA: Application Initialized");
+                         
+    return(CFE_SUCCESS);
+
+}
+
+void EA_AppPipe(CFE_SB_MsgPtr_t msg)
+{
+    CFE_SB_MsgId_t MessageID = 0;
+    uint16 CommandCode = 0;
+
+    MessageID = CFE_SB_GetMsgId(msg);
+    switch (MessageID)
+    {
+        /* Housekeeping telemetry request */
+        case EA_SEND_HK_MID:
+            EA_HousekeepingCmd(msg);
+            break;
+
+        /* EA ground commands */
+        case EA_CMD_MID:
+
+            CommandCode = CFE_SB_GetCmdCode(msg);
+            switch (CommandCode)
+            {
+                case EA_NOOP_CC:
+                    EA_NoopCmd(msg);
+                    break;
+
+                case EA_RESET_CC:
+                    EA_ResetCmd(msg);
+                    break; 
+
+                case EA_HELLOWORLD_CC: 
+                    EA_HelloWorldCmd(msg); 
+                    break;
+
+                default:
+                    CFE_EVS_SendEvent(EA_CC1_ERR_EID, CFE_EVS_ERROR, \
+                    "Invalid ground command code: ID = 0x%X, CC = %d", \
+                                    MessageID, CommandCode);
+                    break;
+            }
+            break;
+
+        default:
+            EA_AppData.ErrCounter++;
+            CFE_EVS_SendEvent(EA_MID_ERR_EID, CFE_EVS_ERROR,
+                            "Invalid command pipe message ID: 0x%X",
+                            MessageID);
+            break;
+    }
+
+    return;
+
+} /* End of EA_AppPipe() */

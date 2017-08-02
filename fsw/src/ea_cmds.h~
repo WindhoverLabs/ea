@@ -1,0 +1,30 @@
+#include "cfe.h"
+
+/**
+ * \brief On-board command (HK request)
+ */
+void EA_HousekeepingCmd(CFE_SB_MsgPtr_t msg);
+
+
+/**
+ * \brief ground command (NO-OP)
+ */
+void EA_NoopCmd(CFE_SB_MsgPtr_t msg);
+
+
+/**
+ * \brief ground command (reset counters)
+ */
+void EA_ResetCmd(CFE_SB_MsgPtr_t msg);
+
+
+/**
+ * \brief ground command (hello world command)
+ */
+void EA_HelloWorldCmd(CFE_SB_MsgPtr_t msg); 
+
+
+/**
+ * \brief Verify command packet length
+ */
+boolean EA_VerifyCmdLength(CFE_SB_MsgPtr_t msg, uint16 ExpectedLength); 

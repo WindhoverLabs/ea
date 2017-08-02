@@ -1,0 +1,29 @@
+
+add_airliner_app_def(ea
+    FILE EA
+    SOURCES
+        ${CMAKE_CURRENT_SOURCE_DIR}/../src/ea_app.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/../src/ea_cds_utils.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/../src/ea_config_utils.c
+   
+    INCLUDES
+        ${CMAKE_CURRENT_SOURCE_DIR}/../src/
+)
+
+add_airliner_app_unit_test(EA-UT
+    UTF 
+    SOURCES
+        ${CMAKE_CURRENT_SOURCE_DIR}/../unit_test/ea_app_test.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/../unit_test/ea_cds_tbl_test.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/../unit_test/ea_cmds_test.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/../unit_test/ea_config_tbl_test.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/../unit_test/ea_testrunner.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/../unit_test/ea_test_utils.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/../src/ea_app.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/../src/ea_cds_utils.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/../src/ea_config_utils.c
+        
+    INCLUDES
+        ${CMAKE_CURRENT_SOURCE_DIR}/../src/
+        ${CMAKE_CURRENT_SOURCE_DIR}/../unit_test/
+)
