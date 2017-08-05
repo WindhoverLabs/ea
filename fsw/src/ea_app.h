@@ -21,6 +21,7 @@
 #include "ea_events.h"
 #include "ea_config_utils.h"
 #include "ea_cds_utils.h"
+#include "ea_custom.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -222,6 +223,69 @@ int32  EA_InitPipe(void);
 int32  EA_RcvMsg(int32 iBlocking);
 
 /************************************************************************/
+/** \brief Receive and process messages TODO
+**
+**  \par Description
+**       This function receives and processes messages
+**       for the EA application
+**
+**  \par Assumptions, External Events, and Notes:
+**       None
+**
+**  \param [in]   iBlocking    A #CFE_SB_PEND_FOREVER, #CFE_SB_POLL or
+**                             millisecond timeout
+**
+**  \returns
+**  \retcode #CFE_SUCCESS  \retdesc \copydoc CFE_SUCCESS \endcode
+**  \retstmt Return codes from #CFE_SB_RcvMsg            \endcode
+**  \endreturns
+**
+*************************************************************************/
+int32  EA_StartApp(CFE_SB_Msg_t* MsgPtr);
+
+/************************************************************************/
+/** \brief Receive and process messages TODO
+**
+**  \par Description
+**       This function receives and processes messages
+**       for the EA application
+**
+**  \par Assumptions, External Events, and Notes:
+**       None
+**
+**  \param [in]   iBlocking    A #CFE_SB_PEND_FOREVER, #CFE_SB_POLL or
+**                             millisecond timeout
+**
+**  \returns
+**  \retcode #CFE_SUCCESS  \retdesc \copydoc CFE_SUCCESS \endcode
+**  \retstmt Return codes from #CFE_SB_RcvMsg            \endcode
+**  \endreturns
+**
+*************************************************************************/
+int32  EA_TermApp(CFE_SB_Msg_t* MsgPtr);
+
+/************************************************************************/
+/** \brief Receive and process messages TODO
+**
+**  \par Description
+**       This function receives and processes messages
+**       for the EA application
+**
+**  \par Assumptions, External Events, and Notes:
+**       None
+**
+**  \param [in]   iBlocking    A #CFE_SB_PEND_FOREVER, #CFE_SB_POLL or
+**                             millisecond timeout
+**
+**  \returns
+**  \retcode #CFE_SUCCESS  \retdesc \copydoc CFE_SUCCESS \endcode
+**  \retstmt Return codes from #CFE_SB_RcvMsg            \endcode
+**  \endreturns
+**
+*************************************************************************/
+int32  EA_Perfmon(CFE_SB_Msg_t* MsgPtr);
+
+/************************************************************************/
 /** \brief Sends EA housekeeping message
 **
 **  \par Description
@@ -264,6 +328,16 @@ void  EA_SendOutData(void);
 **
 *************************************************************************/
 boolean  EA_VerifyCmdLength(CFE_SB_Msg_t* MsgPtr, uint16 usExpectedLen);
+
+/* TODO:  Add Doxygen markup. */
+void EA_ProcessNewData(void);
+void EA_ProcessNewCmds(void);
+void EA_ProcessNewAppCmds(CFE_SB_Msg_t* MsgPtr);
+
+/* TODO:  Add a section for global externals. */
+extern EA_AppData_t  EA_AppData;
+
+
 
 #ifdef __cplusplus
 }

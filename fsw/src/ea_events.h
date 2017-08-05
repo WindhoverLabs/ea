@@ -86,6 +86,45 @@ typedef enum {
 */
     EA_CMD_INF_EID,
 
+/** \brief <tt> 'EA - Recvd $x cmd (%us)' </tt> TODO
+**  \event <tt> 'EA - Recvd $x cmd (%us)' </tt>
+**
+**  \par Type: INFORMATION
+**
+**  \par Cause:
+**
+**  This event message is issued when the CFS EA Task has
+**  received and processed a command.
+**
+*/
+	EA_INF_APP_START,
+
+/** \brief <tt> 'EA - Recvd $x cmd (%us)' </tt> TODO
+**  \event <tt> 'EA - Recvd $x cmd (%us)' </tt>
+**
+**  \par Type: INFORMATION
+**
+**  \par Cause:
+**
+**  This event message is issued when the CFS EA Task has
+**  received and processed a command.
+**
+*/
+	EA_INF_APP_TERM,
+
+/** \brief <tt> 'EA - Recvd $x cmd (%us)' </tt> TODO
+**  \event <tt> 'EA - Recvd $x cmd (%us)' </tt>
+**
+**  \par Type: WARNING TODO?
+**
+**  \par Cause:
+**
+**  This event message is issued when the CFS EA Task has
+**  received and processed a command.
+**
+*/
+	EA_WARN_APP_UTIL,
+
 /** \brief <tt> 'EA - ' </tt>
 **  \event <tt> 'EA - ' </tt>
 **  

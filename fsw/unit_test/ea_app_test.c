@@ -2,7 +2,7 @@
 #include "ea_app_test.h"
 #include "ea_app.h"
 #include "ea_test_utils.h"
-
+#include "ea_custom.h"
 #include "uttest.h"
 #include "ut_osapi_stubs.h"
 #include "ut_cfe_sb_stubs.h"

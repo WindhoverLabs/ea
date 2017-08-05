@@ -307,7 +307,7 @@ int32 EA_RcvMsg(int32 iBlocking)
     int32           iStatus=CFE_SUCCESS;
     CFE_SB_Msg_t*   MsgPtr=NULL;
     CFE_SB_MsgId_t  MsgId;
-
+    OS_printf("RcvMsg: Enter\n");
     /* Stop Performance Log entry */
     CFE_ES_PerfLogExit(EA_MAIN_TASK_PERF_ID);
 
@@ -321,10 +321,11 @@ int32 EA_RcvMsg(int32 iBlocking)
     {
         MsgId = CFE_SB_GetMsgId(MsgPtr);
         switch (MsgId)
-	{
+        {
             case EA_WAKEUP_MID:
                 EA_ProcessNewData();
-
+                EA_ProcessNewCmds();
+                OS_printf("RcvMsg: Wakeup\n");
                 /* TODO:  Add more code here to handle other things when app wakes up */
 
                 /* The last thing to do at the end of this Wakeup cycle should be to
@@ -333,11 +334,12 @@ int32 EA_RcvMsg(int32 iBlocking)
                 break;
 
             case EA_SEND_HK_MID:
-                EA_ProcessNewCmds();
                 EA_ReportHousekeeping();
+                OS_printf("RcvMsg: SendHK\n");
                 break;
 
             default:
+            	OS_printf("RcvMsg: Default\n");
                 (void) CFE_EVS_SendEvent(EA_MSGID_ERR_EID, CFE_EVS_ERROR,
                                   "Recvd invalid SCH msgId (0x%04X)", (unsigned short)MsgId);
         }
@@ -347,6 +349,7 @@ int32 EA_RcvMsg(int32 iBlocking)
         /* TODO: If there's no incoming message, you can do something here, or 
          * nothing.  Note, this section is dead code only if the iBlocking arg
          * is CFE_SB_PEND_FOREVER. */
+    	OS_printf("RcvMsg: No msg\n");
         iStatus = CFE_SUCCESS;
     }
     else if (iStatus == CFE_SB_TIME_OUT)
@@ -355,6 +358,7 @@ int32 EA_RcvMsg(int32 iBlocking)
          * iBlocking arg, you can do something here, or nothing.  
          * Note, this section is dead code only if the iBlocking arg
          * is CFE_SB_PEND_FOREVER. */
+    	OS_printf("RcvMsg: Timeout\n");
         iStatus = CFE_SUCCESS;
     }
     else
@@ -362,11 +366,12 @@ int32 EA_RcvMsg(int32 iBlocking)
         /* TODO: This is an example of exiting on an error (either CFE_SB_BAD_ARGUMENT, or
          * CFE_SB_PIPE_RD_ERROR).
          */
+    	OS_printf("RcvMsg: Bad Msg\n");
         (void) CFE_EVS_SendEvent(EA_PIPE_ERR_EID, CFE_EVS_ERROR,
 			  "SB pipe read error (0x%08X), app will exit", (unsigned int)iStatus);
         EA_AppData.uiRunStatus= CFE_ES_APP_ERROR;
     }
-
+    OS_printf("RcvMsg: Exit\n");
     return (iStatus);
 }
 
@@ -382,6 +387,8 @@ void EA_ProcessNewData()
     int iStatus = CFE_SUCCESS;
     CFE_SB_Msg_t*   DataMsgPtr=NULL;
     CFE_SB_MsgId_t  DataMsgId;
+
+    OS_printf("In ProcessNewData\n");
 
     /* Process telemetry messages till the pipe is empty */
     while (1)
@@ -432,7 +439,7 @@ void EA_ProcessNewCmds()
     int iStatus = CFE_SUCCESS;
     CFE_SB_Msg_t*   CmdMsgPtr=NULL;
     CFE_SB_MsgId_t  CmdMsgId;
-
+    OS_printf("In ProcessNewCmds\n");
     /* Process command messages till the pipe is empty */
     while (1)
     {
@@ -488,7 +495,7 @@ void EA_ProcessNewCmds()
 void EA_ProcessNewAppCmds(CFE_SB_Msg_t* MsgPtr)
 {
     uint32  uiCmdCode=0;
-
+    OS_printf("In ProcessNewAppCmds");
     if (MsgPtr != NULL)
     {
         uiCmdCode = CFE_SB_GetCmdCode(MsgPtr);
@@ -512,6 +519,21 @@ void EA_ProcessNewAppCmds(CFE_SB_Msg_t* MsgPtr)
                                   "Recvd RESET cmd (%u)", (unsigned int)uiCmdCode);
                 break;
 
+            case EA_START_APP_CC:
+            	OS_printf("Processing start cmd");
+				(void) CFE_EVS_SendEvent(EA_CMD_INF_EID, CFE_EVS_INFORMATION,
+								  "Recvd Start App cmd (%u)", (unsigned int)uiCmdCode);
+				EA_StartApp(MsgPtr);
+				break;
+
+            case EA_TERM_APP_CC:
+            	OS_printf("Processing stop cmd");
+				(void) CFE_EVS_SendEvent(EA_CMD_INF_EID, CFE_EVS_INFORMATION,
+								  "Recvd Terminate App cmd (%u)", (unsigned int)uiCmdCode);
+            	EA_TermApp(MsgPtr);
+				break;
+
+
             /* TODO:  Add code to process the rest of the EA commands here */
 
             default:
@@ -521,6 +543,39 @@ void EA_ProcessNewAppCmds(CFE_SB_Msg_t* MsgPtr)
                 break;
         }
     }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* EA Start App                                                    */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+int32 EA_StartApp(CFE_SB_Msg_t* MsgPtr)
+{
+	//return(EA_StartAppCustom(MsgPtr));
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* EA Terminate App                                                */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+int32 EA_TermApp(CFE_SB_Msg_t* MsgPtr)
+{
+	//return(EA_TermAppCustom(MsgPtr));
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* EA Performance Monitor                                          */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+int32 EA_Perfmon(CFE_SB_Msg_t* MsgPtr)
+{
+	//return(EA_PerfmonCustom(MsgPtr));
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -635,18 +690,19 @@ void EA_AppMain()
     /* Application main loop */
     while (CFE_ES_RunLoop(&EA_AppData.uiRunStatus) == TRUE)
     {
-    	uint32 *x = malloc(1000);
+    	OS_printf("iStatus: %i\n", iStatus);
         int32 iStatus = EA_RcvMsg(EA_SCH_PIPE_PEND_TIME);
         if (iStatus != CFE_SUCCESS)
         {
-            /* TODO: Decide what to do for other return values in EA_RcvMsg(). */
+        	OS_printf("iStatus does not = CFE_SUCCESS\n");
+        	/* TODO: Decide what to do for other return values in EA_RcvMsg(). */
         }
         /* TODO: This is only a suggestion for when to update and save CDS table.
         ** Depends on the nature of the application, the frequency of update
         ** and save can be more or less independently.
         */
-        EA_UpdateCdsTbl();
-        EA_SaveCdsTbl();
+        //EA_UpdateCdsTbl();
+        //EA_SaveCdsTbl();
         iStatus = EA_AcquireConfigPointers();
         if(iStatus != CFE_SUCCESS)
         {
