@@ -154,6 +154,41 @@ extern "C" {
 */
 #define EA_TERM_APP_CC                (3)
 
+/** \eacmd Reset Counters TODO
+**
+**  \par Description
+**       Resets the ea housekeeping counters
+**
+**  \eacmdmnemonic \EA_TLMRST
+**
+**  \par Command Structure
+**       #EA_NoArgCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with
+**       the following telemetry:
+**       - \b \c \EA_CMDACTPCNT       - command counter will be cleared
+**       - \b \c \EA_CMDRJCTCNT       - command error counter will be cleared
+**       - The #EA_CMD_INF_EID debug event message will be
+**         generated when the command is executed
+**
+**  \par Error Conditions
+**       This command may fail for the following reason(s):
+**       - Command packet length not as expected
+**
+**  \par Evidence of failure may be found in the following telemetry:
+**       - \b \c \EA_CMDRJCTCNT - command error counter will increment
+**       - Error specific event message #EA_MSGID_ERR_EID
+**
+**  \par Criticality
+**       None
+**
+**  \sa #EA_NOOP_CC
+*/
+#define EA_PERFMON_CC                (4)
+
+
+
 /************************************************************************
 ** Local Structure Declarations
 *************************************************************************/
@@ -230,11 +265,11 @@ typedef struct
 
     /** \eatlmmnemonic \EA_
 		\brief CPU utilization of current running application */
-    uint8			   ActiveAppUtil;
+    float			   ActiveAppUtil;
 
     /** \eatlmmnemonic \EA_
     		\brief Padding to correctly allign */
-    uint8				padding;
+    //uint8				padding;
 
     /** \eatlmmnemonic \EA_
 		\brief PID of current running application */

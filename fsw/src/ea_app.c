@@ -510,7 +510,9 @@ void EA_ProcessNewAppCmds(CFE_SB_Msg_t* MsgPtr)
 				EA_AppData.HkTlm.ActiveAppPID = 0;
 				memset(EA_AppData.HkTlm.LastAppRun, '\0', OS_MAX_PATH_LEN);
 				EA_AppData.HkTlm.LastAppStatus = 0;
-				//EA_AppData.ChildTaskInUse = FALSE;
+				EA_AppData.ProcData.p_time = 0;
+				EA_AppData.ProcData.total_time = 0;
+				EA_AppData.ChildAppTaskInUse = FALSE;
 
                 (void) CFE_EVS_SendEvent(EA_CMD_INF_EID, CFE_EVS_INFORMATION,
                                   "Recvd RESET cmd (%u)", (unsigned int)uiCmdCode);
@@ -526,6 +528,12 @@ void EA_ProcessNewAppCmds(CFE_SB_Msg_t* MsgPtr)
 				(void) CFE_EVS_SendEvent(EA_CMD_INF_EID, CFE_EVS_INFORMATION,
 								  "Recvd Terminate App cmd (%u)", (unsigned int)uiCmdCode);
             	EA_TermApp(MsgPtr);
+				break;
+
+            case EA_PERFMON_CC:
+				(void) CFE_EVS_SendEvent(EA_CMD_INF_EID, CFE_EVS_INFORMATION,
+								  "Recvd Perfmon cmd (%u)", (unsigned int)uiCmdCode);
+				EA_Perfmon();
 				break;
 
 
@@ -550,7 +558,7 @@ void EA_StartApp(CFE_SB_Msg_t* MsgPtr)
 {
 	/* command verification variables */
 	uint16              ExpectedLength = sizeof(EA_StartCmd_t);
-	uint32              ChildTaskID;
+	uint32              ChildAppTaskID;
 	int32               Status;
 	EA_StartCmd_t  *CmdPtr = 0;
 	char DEF_INTERPRETER[OS_MAX_PATH_LEN] = "/usr/bin/python";
@@ -559,7 +567,7 @@ void EA_StartApp(CFE_SB_Msg_t* MsgPtr)
 	/* Verify command packet length... */
 	if (EA_VerifyCmdLength (MsgPtr,ExpectedLength))
 	{
-		if (EA_AppData.ChildTaskInUse == FALSE)
+		if (EA_AppData.ChildAppTaskInUse == FALSE)
 		{
 			CmdPtr = ((EA_StartCmd_t *) MsgPtr);
 
@@ -603,9 +611,9 @@ void EA_StartApp(CFE_SB_Msg_t* MsgPtr)
 					strcpy(EA_AppData.ChildData.AppScript, CmdPtr->script);
 
 					/* There is no child task running right now, we can use it*/
-					EA_AppData.ChildTaskInUse = TRUE;
+					EA_AppData.ChildAppTaskInUse = TRUE;
 
-					Status = CFE_ES_CreateChildTask(&ChildTaskID,
+					Status = CFE_ES_CreateChildTask(&ChildAppTaskID,
 													EA_START_APP_TASK_NAME,
 													EA_StartAppCustom,
 													NULL,
@@ -616,7 +624,7 @@ void EA_StartApp(CFE_SB_Msg_t* MsgPtr)
 					{
 						CFE_EVS_SendEvent (EA_CHILD_TASK_START, CFE_EVS_DEBUG, "Created child task for app start.");
 
-						EA_AppData.ChildTaskID = ChildTaskID;
+						EA_AppData.ChildAppTaskID = ChildAppTaskID;
 					}
 					else/* child task creation failed */
 					{
@@ -626,7 +634,7 @@ void EA_StartApp(CFE_SB_Msg_t* MsgPtr)
 										   Status);
 
 						EA_AppData.HkTlm.usCmdErrCnt++;
-						EA_AppData.ChildTaskInUse   = FALSE;
+						EA_AppData.ChildAppTaskInUse   = FALSE;
 						memset(EA_AppData.ChildData.AppInterpreter, '\0', OS_MAX_PATH_LEN);
 						memset(EA_AppData.ChildData.AppScript, '\0', OS_MAX_PATH_LEN);
 					}
@@ -681,16 +689,14 @@ void EA_Perfmon()
 {
 	if(EA_AppData.HkTlm.ActiveAppPID != 0)
 	{
-		uint8 util = 0;
-		uint8 cpu_ndx = EA_CalibrateTop(EA_AppData.HkTlm.ActiveAppPID);
-		//OS_printf("CPU index: %i\n", cpu_ndx);
+		EA_PerfmonCustom(EA_AppData.HkTlm.ActiveAppPID);
+		if(EA_AppData.HkTlm.ActiveAppUtil > EA_APP_UTIL_THRESHOLD)
+		{
+			CFE_EVS_SendEvent(EA_WARN_APP_UTIL, CFE_EVS_INFORMATION,
+								"External application exceeded utilization threshold");
+		}
+	}
 
-		util = EA_GetPidUtil(EA_AppData.HkTlm.ActiveAppPID, cpu_ndx);
-	}
-	else
-	{
-		//OS_printf("Cannot perform perfmon with no running task.\n");
-	}
 	return;
 }
 

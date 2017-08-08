@@ -32,6 +32,7 @@ extern "C" {
 *************************************************************************/
 #define EA_TIMEOUT_MSEC             	(1000)
 #define EA_START_APP_TASK_NAME            "EA_StartAppCustom"
+#define EA_PERFMON_TASK_NAME            "EA_PerfmonCustom"
 
 /************************************************************************
 ** Local Structure Definitions
@@ -83,16 +84,20 @@ typedef struct
     EA_OutData_t  OutData;
 
     /**< \brief Flag for a child task in use */
-    boolean  ChildTaskInUse;
+    boolean  ChildAppTaskInUse;
 
     /**< \brief Task ID for the child task */
-    uint32  ChildTaskID;
+    uint32  ChildAppTaskID;
 
     /** \brief Housekeeping Telemetry for downlink */
     EA_HkTlm_t  HkTlm;
 
     /** \brief Info child task needs to launch external app */
     EA_ChildData_t ChildData;
+
+    /** \brief Process info for external app */
+    EA_ProcData_t ProcData;
+
 
 } EA_AppData_t;
 
