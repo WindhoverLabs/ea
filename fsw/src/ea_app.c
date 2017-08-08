@@ -14,6 +14,8 @@
 #include "ea_msg.h"
 #include "ea_version.h"
 
+#include <unistd.h>
+
 /************************************************************************
 ** Local Defines
 *************************************************************************/
@@ -503,19 +505,24 @@ void EA_ProcessNewAppCmds(CFE_SB_Msg_t* MsgPtr)
             case EA_RESET_CC:
                 EA_AppData.HkTlm.usCmdCnt = 0;
                 EA_AppData.HkTlm.usCmdErrCnt = 0;
+                memset(EA_AppData.HkTlm.ActiveApp, '\0', OS_MAX_PATH_LEN);
+				EA_AppData.HkTlm.ActiveAppUtil = 0;
+				EA_AppData.HkTlm.ActiveAppPID = 0;
+				memset(EA_AppData.HkTlm.LastAppRun, '\0', OS_MAX_PATH_LEN);
+				EA_AppData.HkTlm.LastAppStatus = 0;
+				//EA_AppData.ChildTaskInUse = FALSE;
+
                 (void) CFE_EVS_SendEvent(EA_CMD_INF_EID, CFE_EVS_INFORMATION,
                                   "Recvd RESET cmd (%u)", (unsigned int)uiCmdCode);
                 break;
 
             case EA_START_APP_CC:
-            	OS_printf("Processing start cmd\n");
 				(void) CFE_EVS_SendEvent(EA_CMD_INF_EID, CFE_EVS_INFORMATION,
 								  "Recvd Start App cmd (%u)", (unsigned int)uiCmdCode);
 				EA_StartApp(MsgPtr);
 				break;
 
             case EA_TERM_APP_CC:
-            	OS_printf("Processing stop cmd\n");
 				(void) CFE_EVS_SendEvent(EA_CMD_INF_EID, CFE_EVS_INFORMATION,
 								  "Recvd Terminate App cmd (%u)", (unsigned int)uiCmdCode);
             	EA_TermApp(MsgPtr);
@@ -539,9 +546,117 @@ void EA_ProcessNewAppCmds(CFE_SB_Msg_t* MsgPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-int32 EA_StartApp(CFE_SB_Msg_t* MsgPtr)
+void EA_StartApp(CFE_SB_Msg_t* MsgPtr)
 {
-	return(EA_StartAppCustom(MsgPtr));
+	/* command verification variables */
+	uint16              ExpectedLength = sizeof(EA_StartCmd_t);
+	uint32              ChildTaskID;
+	int32               Status;
+	EA_StartCmd_t  *CmdPtr = 0;
+	char DEF_INTERPRETER[OS_MAX_PATH_LEN] = "/usr/bin/python";
+	char DEF_SCRIPT[OS_MAX_PATH_LEN] = "/home/vagrant/prototype/ea_proto/test_py.py";
+
+	/* Verify command packet length... */
+	if (EA_VerifyCmdLength (MsgPtr,ExpectedLength))
+	{
+		if (EA_AppData.ChildTaskInUse == FALSE)
+		{
+			CmdPtr = ((EA_StartCmd_t *) MsgPtr);
+
+			/*
+			** Check if the interpreter string is a nul string
+			*/
+			if(strlen(CmdPtr->interpreter) == 0)
+			{
+				strcpy(CmdPtr->interpreter, DEF_INTERPRETER);
+			}
+
+			/*
+			** Check if the filename string is a nul string
+			*/
+			if(strlen(CmdPtr->script) == 0)
+			{
+				strcpy(CmdPtr->script, DEF_SCRIPT);
+			}
+
+			/*
+			** NUL terminate the very end of the filename string as a
+			** safety measure
+			*/
+			CmdPtr->interpreter[OS_MAX_PATH_LEN - 1] = '\0';
+			CmdPtr->script[OS_MAX_PATH_LEN - 1] = '\0';
+
+			/*
+			** Check if specified interpreter exists
+			*/
+			if(access(CmdPtr->interpreter, F_OK ) != -1)
+			{
+				/*
+				** Check if specified script exists
+				*/
+				if(access(CmdPtr->script, F_OK ) != -1)
+				{
+					/*
+					** Update ChildData with validated data
+					*/
+					strcpy(EA_AppData.ChildData.AppInterpreter, CmdPtr->interpreter);
+					strcpy(EA_AppData.ChildData.AppScript, CmdPtr->script);
+
+					/* There is no child task running right now, we can use it*/
+					EA_AppData.ChildTaskInUse = TRUE;
+
+					Status = CFE_ES_CreateChildTask(&ChildTaskID,
+													EA_START_APP_TASK_NAME,
+													EA_StartAppCustom,
+													NULL,
+													CFE_ES_DEFAULT_STACK_SIZE,
+													EA_CHILD_TASK_PRIORITY,
+													0);
+					if (Status == CFE_SUCCESS)
+					{
+						CFE_EVS_SendEvent (EA_CHILD_TASK_START, CFE_EVS_DEBUG, "Created child task for app start.");
+
+						EA_AppData.ChildTaskID = ChildTaskID;
+					}
+					else/* child task creation failed */
+					{
+						CFE_EVS_SendEvent (EA_CHILD_TASK_START_ERR_EID,
+										   CFE_EVS_ERROR,
+										   "Create child tasked failed. Unable to start external application.",
+										   Status);
+
+						EA_AppData.HkTlm.usCmdErrCnt++;
+						EA_AppData.ChildTaskInUse   = FALSE;
+						memset(EA_AppData.ChildData.AppInterpreter, '\0', OS_MAX_PATH_LEN);
+						memset(EA_AppData.ChildData.AppScript, '\0', OS_MAX_PATH_LEN);
+					}
+
+				}
+				else
+				{
+					EA_AppData.HkTlm.usCmdErrCnt++;
+					CFE_EVS_SendEvent(EA_CMD_ERR_EID, CFE_EVS_ERROR,
+						"Specified script does not exist");
+				}
+			}
+			else
+			{
+				EA_AppData.HkTlm.usCmdErrCnt++;
+				CFE_EVS_SendEvent(EA_CMD_ERR_EID, CFE_EVS_ERROR,
+					"Specified interpreter does not exist");
+			}
+		}
+		else
+		{
+			/*send event that we can't start another task right now */
+			CFE_EVS_SendEvent (EA_CHILD_TASK_START_ERR_EID,
+							   CFE_EVS_ERROR,
+							   "Create child tasked failed. A child task is in use");
+
+			EA_AppData.HkTlm.usCmdErrCnt++;
+		}
+	}
+	return;
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -550,9 +665,10 @@ int32 EA_StartApp(CFE_SB_Msg_t* MsgPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-int32 EA_TermApp(CFE_SB_Msg_t* MsgPtr)
+void EA_TermApp(CFE_SB_Msg_t* MsgPtr)
 {
-	return(EA_TermAppCustom(MsgPtr));
+	EA_TermAppCustom(MsgPtr);
+	return;
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -561,9 +677,21 @@ int32 EA_TermApp(CFE_SB_Msg_t* MsgPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-int32 EA_Perfmon(CFE_SB_Msg_t* MsgPtr)
+void EA_Perfmon()
 {
-	//return(EA_PerfmonCustom(MsgPtr));
+	if(EA_AppData.HkTlm.ActiveAppPID != 0)
+	{
+		uint8 util = 0;
+		uint8 cpu_ndx = EA_CalibrateTop(EA_AppData.HkTlm.ActiveAppPID);
+		//OS_printf("CPU index: %i\n", cpu_ndx);
+
+		util = EA_GetPidUtil(EA_AppData.HkTlm.ActiveAppPID, cpu_ndx);
+	}
+	else
+	{
+		//OS_printf("Cannot perform perfmon with no running task.\n");
+	}
+	return;
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -685,6 +813,7 @@ void EA_AppMain()
         	OS_printf("iStatus does not = CFE_SUCCESS\n");
         	/* TODO: Decide what to do for other return values in EA_RcvMsg(). */
         }
+        EA_Perfmon();
         /* TODO: This is only a suggestion for when to update and save CDS table.
         ** Depends on the nature of the application, the frequency of update
         ** and save can be more or less independently.

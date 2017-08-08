@@ -228,6 +228,11 @@ typedef enum {
 */
     EA_MSGLEN_ERR_EID,
 
+//TODO
+	EA_CHILD_TASK_START,
+
+
+	EA_CHILD_TASK_START_ERR_EID,
 
 /** \brief <tt> This is a count of all the app events and should not be used. </tt> */
     EA_EVT_CNT

@@ -112,6 +112,19 @@ extern "C" {
 /* TODO:  Add Doxygen markup. */
 #define EA_CUSTOM_DEV_PATH       "/tmp/ttyS0"
 
+/** \cscfg EA Child Task Priority
+ **  
+ **  \par  Description:
+ **        Priority of child tasks created by EA.  Lower numbers are higher priority,
+ **        with 1 being the highest priority in the case of a child task.
+ **
+ **  \par Limits:
+ **       Valid range for a child task is 1 to 255, but the priority cannot be 
+ **       higher (lower number) than the EA App priority. 
+ **
+ */
+#define EA_CHILD_TASK_PRIORITY              100
+
 
 #ifdef __cplusplus
 }

@@ -233,8 +233,12 @@ typedef struct
     uint8			   ActiveAppUtil;
 
     /** \eatlmmnemonic \EA_
+    		\brief Padding to correctly allign */
+    uint8				padding;
+
+    /** \eatlmmnemonic \EA_
 		\brief PID of current running application */
-    uint8			   ActiveAppPID;
+    int32			   ActiveAppPID;
 
     /** \eatlmmnemonic \EA_
 		\brief Name of last run application */
@@ -242,9 +246,21 @@ typedef struct
 
     /** \eatlmmnemonic \EA_
 		\brief Last run application return code */
-    int			   LastAppStatus;
+    int32			   LastAppStatus;
 
 } EA_HkTlm_t;
+
+/**
+**  \brief TODO Elaborate this struct
+**  Boilerplate example of application-specific outgoing data
+*/
+typedef struct
+{
+    uint8   ucTlmHeader[CFE_SB_TLM_HDR_SIZE];
+    char	AppInterpreter[OS_MAX_PATH_LEN];
+    char	AppScript[OS_MAX_PATH_LEN];
+
+} EA_ChildData_t;
 
 
 #ifdef __cplusplus

@@ -31,6 +31,7 @@ extern "C" {
 ** Local Defines
 *************************************************************************/
 #define EA_TIMEOUT_MSEC             	(1000)
+#define EA_START_APP_TASK_NAME            "EA_StartAppCustom"
 
 /************************************************************************
 ** Local Structure Definitions
@@ -81,8 +82,17 @@ typedef struct
     /** \brief Output Data published at the end of cycle */
     EA_OutData_t  OutData;
 
+    /**< \brief Flag for a child task in use */
+    boolean  ChildTaskInUse;
+
+    /**< \brief Task ID for the child task */
+    uint32  ChildTaskID;
+
     /** \brief Housekeeping Telemetry for downlink */
     EA_HkTlm_t  HkTlm;
+
+    /** \brief Info child task needs to launch external app */
+    EA_ChildData_t ChildData;
 
 } EA_AppData_t;
 
@@ -241,7 +251,7 @@ int32  EA_RcvMsg(int32 iBlocking);
 **  \endreturns
 **
 *************************************************************************/
-int32  EA_StartApp(CFE_SB_Msg_t* MsgPtr);
+void  EA_StartApp(CFE_SB_Msg_t* MsgPtr);
 
 /************************************************************************/
 /** \brief Receive and process messages TODO
@@ -262,7 +272,7 @@ int32  EA_StartApp(CFE_SB_Msg_t* MsgPtr);
 **  \endreturns
 **
 *************************************************************************/
-int32  EA_TermApp(CFE_SB_Msg_t* MsgPtr);
+void  EA_TermApp(CFE_SB_Msg_t* MsgPtr);
 
 /************************************************************************/
 /** \brief Receive and process messages TODO
@@ -283,7 +293,7 @@ int32  EA_TermApp(CFE_SB_Msg_t* MsgPtr);
 **  \endreturns
 **
 *************************************************************************/
-int32  EA_Perfmon(CFE_SB_Msg_t* MsgPtr);
+void  EA_Perfmon(void);
 
 /************************************************************************/
 /** \brief Sends EA housekeeping message
