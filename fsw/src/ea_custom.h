@@ -44,5 +44,6 @@ void EA_StartAppCustom();
 
 void EA_TermAppCustom(CFE_SB_Msg_t* MsgPtr);
 void EA_PerfmonCustom(int32 pid);
+EA_ProcData_t EA_ParsePidUtil(int32 pid);
 
 #endif
