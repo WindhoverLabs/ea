@@ -32,7 +32,6 @@ extern "C" {
 *************************************************************************/
 #define EA_TIMEOUT_MSEC             	(1000)
 #define EA_START_APP_TASK_NAME            "EA_StartAppCustom"
-#define EA_PERFMON_TASK_NAME            "EA_PerfmonCustom"
 
 /************************************************************************
 ** Local Structure Definitions

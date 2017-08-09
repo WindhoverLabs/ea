@@ -8,10 +8,12 @@ add_airliner_app_def(ea
    
     INCLUDES
         ${CMAKE_CURRENT_SOURCE_DIR}/../src/
+
+	USER_DOCS   ${CMAKE_CURRENT_SOURCE_DIR}/user_doxy.in
 )
 
-add_airliner_app_unit_test(EA-UT
-    UTF 
+add_airliner_app_unit_test(ea-ut
+    UTASSERT 
     SOURCES
         ${CMAKE_CURRENT_SOURCE_DIR}/../unit_test/ea_app_test.c
         ${CMAKE_CURRENT_SOURCE_DIR}/../unit_test/ea_cds_tbl_test.c

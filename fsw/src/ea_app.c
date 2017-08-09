@@ -9,7 +9,6 @@
 #include <string.h>
 
 #include "cfe.h"
-
 #include "ea_app.h"
 #include "ea_msg.h"
 #include "ea_version.h"
