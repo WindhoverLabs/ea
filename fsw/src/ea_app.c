@@ -561,7 +561,7 @@ int32 EA_StartApp(CFE_SB_Msg_t* MsgPtr)
 	int32               Status = CFE_ES_APP_ERROR;
 	EA_StartCmd_t  *CmdPtr = 0;
 	char DEF_INTERPRETER[OS_MAX_PATH_LEN] = "/usr/bin/python";
-	char DEF_SCRIPT[OS_MAX_PATH_LEN] = "/home/vagrant/prototype/ea_proto/test_py.py";
+	char DEF_SCRIPT[OS_MAX_PATH_LEN] = "/home/vagrant/prototype/ea_proto/fib.py";
 
 	/* Verify command packet length... */
 	if (EA_VerifyCmdLength (MsgPtr,ExpectedLength))
@@ -575,7 +575,7 @@ int32 EA_StartApp(CFE_SB_Msg_t* MsgPtr)
 			*/
 			if(strlen(CmdPtr->interpreter) == 0)
 			{
-				strcpy(CmdPtr->interpreter, DEF_INTERPRETER);
+				//strcpy(CmdPtr->interpreter, DEF_INTERPRETER);
 			}
 
 			/*
@@ -820,20 +820,13 @@ void EA_AppMain()
     /* Application main loop */
     while (CFE_ES_RunLoop(&EA_AppData.uiRunStatus) == TRUE)
     {
-//    	OS_printf("iStatus: %i\n", iStatus);
         int32 iStatus = EA_RcvMsg(EA_SCH_PIPE_PEND_TIME);
         if (iStatus != CFE_SUCCESS)
         {
-        	OS_printf("iStatus does not = CFE_SUCCESS\n");
         	/* TODO: Decide what to do for other return values in EA_RcvMsg(). */
         }
         EA_Perfmon();
-        /* TODO: This is only a suggestion for when to update and save CDS table.
-        ** Depends on the nature of the application, the frequency of update
-        ** and save can be more or less independently.
-        */
-        //EA_UpdateCdsTbl();
-        //EA_SaveCdsTbl();
+        
         iStatus = EA_AcquireConfigPointers();
         if(iStatus != CFE_SUCCESS)
         {

@@ -17,8 +17,8 @@
 #include "ut_cfe_fs_stubs.h"
 #include "ut_cfe_time_stubs.h"
 
-char PYTHON_PATH[OS_MAX_PATH_LEN] = "/usr/bin/python";
-char SCRIPT_PATH[OS_MAX_PATH_LEN] = "/home/vagrant/prototype/ea_proto/sleep.py";
+char APP_PATH[OS_MAX_PATH_LEN] = "/usr/bin/python";
+char TEST_ARG[OS_MAX_PATH_LEN] = "sleep.py";
 
 int32 hookCalledCount = 0;
 
@@ -599,7 +599,8 @@ void Test_EA_ProcessNewAppCmds_StartApp_NoArgs(void)
 
 	/* Verify results */
 	UtAssert_True(Ut_CFE_EVS_GetEventQueueDepth()==1,"Event Count = 1");
-	UtAssert_EventSent(EA_APP_ARG_ERR_EID, CFE_EVS_ERROR, "", "Invalid argument event sent");
+	UtAssert_EventSent(EA_APP_ARG_ERR_EID, CFE_EVS_ERROR, 
+						"Specified app does not exist", "Invalid argument event sent");
 	UtAssert_True(EA_AppData.HkTlm.usCmdErrCnt==1,"Command Error Count = 1");
 }
 
@@ -611,8 +612,8 @@ void Test_EA_ProcessNewAppCmds_StartApp_InvalidAppArg(void)
 	EA_StartCmd_t InStartCmd;
 
 	CFE_SB_InitMsg (&InStartCmd, EA_CMD_MID, sizeof(InStartCmd), TRUE);
-	strcpy(InStartCmd.interpreter, "NotADirectory");
-	strcpy(InStartCmd.script, SCRIPT_PATH);
+	strcpy(InStartCmd.interpreter, "InvalidDirectory");
+	strcpy(InStartCmd.script, TEST_ARG);
 
 	/* Execute the function being tested */
 	EA_StartApp((CFE_SB_MsgPtr_t)(&InStartCmd));
@@ -632,8 +633,8 @@ void Test_EA_ProcessNewAppCmds_StartApp_InvalidArgArg(void)
 	EA_StartCmd_t InStartCmd;
 
 	CFE_SB_InitMsg (&InStartCmd, EA_CMD_MID, sizeof(InStartCmd), TRUE);
-	strcpy(InStartCmd.interpreter, PYTHON_PATH);
-	strcpy(InStartCmd.script, "NotADirectory");
+	strcpy(InStartCmd.interpreter, APP_PATH);
+	strcpy(InStartCmd.script, "InvalidDirectory");
 
 	/* Execute the function being tested */
 	EA_StartApp((CFE_SB_MsgPtr_t)(&InStartCmd));
@@ -674,8 +675,8 @@ void Test_EA_ProcessNewAppCmds_StartApp_Nominal(void)
 	EA_StartCmd_t InStartCmd;
 
 	CFE_SB_InitMsg (&InStartCmd, EA_CMD_MID, sizeof(InStartCmd), TRUE);
-	strcpy(InStartCmd.interpreter, PYTHON_PATH);
-	strcpy(InStartCmd.script, SCRIPT_PATH);
+	strcpy(InStartCmd.interpreter, APP_PATH);
+	strcpy(InStartCmd.script, TEST_ARG);
 
 	/* Sets ChildTaskID to 5 and returns CFE_SUCCESS */
     Ut_CFE_ES_SetFunctionHook(UT_CFE_ES_CREATECHILDTASK_INDEX, &EA_CMDS_TEST_CFE_ES_CreateChildTaskHook);
@@ -690,6 +691,31 @@ void Test_EA_ProcessNewAppCmds_StartApp_Nominal(void)
 	UtAssert_True(EA_AppData.ChildAppTaskID==5,"Child task ID set");
 	UtAssert_True(EA_AppData.HkTlm.usCmdCnt==0,"Command Count = 0"); // 0 because incremented in child thread
 	UtAssert_True(EA_AppData.HkTlm.usCmdErrCnt==0,"Command Error Count = 0");
+}
+
+/**
+ * Test EA_ProcessNewAppCmds(), Start App command, Fail Create Child task
+ */
+void Test_EA_ProcessNewAppCmds_StartApp_CreateChildTaskError(void)
+{
+	EA_StartCmd_t InStartCmd;
+
+	CFE_SB_InitMsg (&InStartCmd, EA_CMD_MID, sizeof(InStartCmd), TRUE);
+	strcpy(InStartCmd.interpreter, APP_PATH);
+	strcpy(InStartCmd.script, TEST_ARG);
+
+	/* Set to generate error message EA_CHILD_TASK_START_ERR_EID */
+    Ut_CFE_ES_SetReturnCode(UT_CFE_ES_CREATECHILDTASK_INDEX, -1, 1);
+
+	/* Execute the function being tested */
+	EA_StartApp((CFE_SB_MsgPtr_t)(&InStartCmd));
+
+	/* Verify results */
+	UtAssert_True(Ut_CFE_EVS_GetEventQueueDepth()==1,"Event Count = 1");
+	UtAssert_EventSent(EA_CHILD_TASK_START_ERR_EID, CFE_EVS_ERROR, "", "Child task failed to start");
+	UtAssert_True(EA_AppData.ChildAppTaskInUse==FALSE,"Child task in use set to false");
+	UtAssert_True(EA_AppData.ChildAppTaskID==0,"Child task ID not set");
+	UtAssert_True(EA_AppData.HkTlm.usCmdErrCnt==1,"Command Error Count = 1");
 }
 
 /**
@@ -885,6 +911,8 @@ void EA_App_Test_AddTestCases(void)
                        "Test_EA_ProcessNewAppCmds_StartApp_AlreadyActive");
 	UtTest_Add(Test_EA_ProcessNewAppCmds_StartApp_Nominal, EA_Test_Setup, EA_Test_TearDown,
                        "Test_EA_ProcessNewAppCmds_StartApp_Nominal");
+	UtTest_Add(Test_EA_ProcessNewAppCmds_StartApp_CreateChildTaskError, EA_Test_Setup, EA_Test_TearDown,
+                       "Test_EA_ProcessNewAppCmds_StartApp_CreateChildTaskError");
 	UtTest_Add(Test_EA_ProcessNewAppCmds_StopApp_InvalidSize, EA_Test_Setup, EA_Test_TearDown,
                        "Test_EA_ProcessNewAppCmds_StopApp_InvalidSize");
 	UtTest_Add(Test_EA_ProcessNewAppCmds_StopApp_NoneActive, EA_Test_Setup, EA_Test_TearDown,
@@ -898,7 +926,3 @@ void EA_App_Test_AddTestCases(void)
 	UtTest_Add(Test_EA_Perfmon_WarnUtil, EA_Test_Setup, EA_Test_TearDown,
                        "Test_EA_Perfmon_WarnUtil");
 }
-
-
-
-
