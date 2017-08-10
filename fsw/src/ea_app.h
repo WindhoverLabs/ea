@@ -255,7 +255,7 @@ int32  EA_RcvMsg(int32 iBlocking);
 **  \endreturns
 **
 *************************************************************************/
-void  EA_StartApp(CFE_SB_Msg_t* MsgPtr);
+int32  EA_StartApp(CFE_SB_Msg_t* MsgPtr);
 
 /************************************************************************/
 /** \brief Receive and process messages TODO

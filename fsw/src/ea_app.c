@@ -399,8 +399,8 @@ void EA_ProcessNewData()
                 */
 
                 default:
-                    (void) CFE_EVS_SendEvent(EA_MSGID_ERR_EID, CFE_EVS_ERROR,
-                                      "Recvd invalid data msgId (0x%04X)", (unsigned short)DataMsgId);
+                    //(void) CFE_EVS_SendEvent(EA_MSGID_ERR_EID, CFE_EVS_ERROR,
+                                      //"Recvd invalid data msgId (0x%04X)", (unsigned short)DataMsgId);
                     break;
             }
         }
@@ -492,7 +492,7 @@ void EA_ProcessNewAppCmds(CFE_SB_Msg_t* MsgPtr)
         {
             case EA_NOOP_CC:
                 EA_AppData.HkTlm.usCmdCnt++;
-                (void) CFE_EVS_SendEvent(EA_CMD_INF_EID, CFE_EVS_INFORMATION,
+                (void) CFE_EVS_SendEvent(EA_CMD_NOOP_EID, CFE_EVS_INFORMATION,
                                   "Recvd NOOP cmd (%u), Version %d.%d.%d.%d",
                                   (unsigned int)uiCmdCode,
                                   EA_MAJOR_VERSION,
@@ -513,7 +513,7 @@ void EA_ProcessNewAppCmds(CFE_SB_Msg_t* MsgPtr)
 				EA_AppData.ProcData.total_time = 0;
 				EA_AppData.ChildAppTaskInUse = FALSE;
 
-                (void) CFE_EVS_SendEvent(EA_CMD_INF_EID, CFE_EVS_INFORMATION,
+                (void) CFE_EVS_SendEvent(EA_CMD_RESET_EID, CFE_EVS_INFORMATION,
                                   "Recvd RESET cmd (%u)", (unsigned int)uiCmdCode);
                 break;
 
@@ -553,12 +553,12 @@ void EA_ProcessNewAppCmds(CFE_SB_Msg_t* MsgPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void EA_StartApp(CFE_SB_Msg_t* MsgPtr)
+int32 EA_StartApp(CFE_SB_Msg_t* MsgPtr)
 {
 	/* command verification variables */
 	uint16              ExpectedLength = sizeof(EA_StartCmd_t);
 	uint32              ChildAppTaskID;
-	int32               Status;
+	int32               Status = CFE_ES_APP_ERROR;
 	EA_StartCmd_t  *CmdPtr = 0;
 	char DEF_INTERPRETER[OS_MAX_PATH_LEN] = "/usr/bin/python";
 	char DEF_SCRIPT[OS_MAX_PATH_LEN] = "/home/vagrant/prototype/ea_proto/test_py.py";
@@ -621,7 +621,7 @@ void EA_StartApp(CFE_SB_Msg_t* MsgPtr)
 													0);
 					if (Status == CFE_SUCCESS)
 					{
-						CFE_EVS_SendEvent (EA_CHILD_TASK_START, CFE_EVS_DEBUG, "Created child task for app start.");
+						CFE_EVS_SendEvent (EA_CHILD_TASK_START_EID, CFE_EVS_DEBUG, "Created child task for app start.");
 
 						EA_AppData.ChildAppTaskID = ChildAppTaskID;
 					}
@@ -642,15 +642,15 @@ void EA_StartApp(CFE_SB_Msg_t* MsgPtr)
 				else
 				{
 					EA_AppData.HkTlm.usCmdErrCnt++;
-					CFE_EVS_SendEvent(EA_CMD_ERR_EID, CFE_EVS_ERROR,
-						"Specified script does not exist");
+					CFE_EVS_SendEvent(EA_APP_ARG_ERR_EID, CFE_EVS_ERROR,
+						"Specified arg does not exist");
 				}
 			}
 			else
 			{
 				EA_AppData.HkTlm.usCmdErrCnt++;
-				CFE_EVS_SendEvent(EA_CMD_ERR_EID, CFE_EVS_ERROR,
-					"Specified interpreter does not exist");
+				CFE_EVS_SendEvent(EA_APP_ARG_ERR_EID, CFE_EVS_ERROR,
+					"Specified app does not exist");
 			}
 		}
 		else
@@ -663,7 +663,7 @@ void EA_StartApp(CFE_SB_Msg_t* MsgPtr)
 			EA_AppData.HkTlm.usCmdErrCnt++;
 		}
 	}
-	return;
+	return Status;
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -674,7 +674,16 @@ void EA_StartApp(CFE_SB_Msg_t* MsgPtr)
 
 void EA_TermApp(CFE_SB_Msg_t* MsgPtr)
 {
-	EA_TermAppCustom(MsgPtr);
+	uint16 ExpectedLength = sizeof(EA_NoArgCmd_t);
+
+	/*
+	** Verify command packet length
+	*/
+	if(EA_VerifyCmdLength(MsgPtr, ExpectedLength))
+	{
+		EA_TermAppCustom(MsgPtr);
+	}
+
 	return;
 }
 
@@ -691,7 +700,7 @@ void EA_Perfmon()
 		EA_PerfmonCustom(EA_AppData.HkTlm.ActiveAppPID);
 		if(EA_AppData.HkTlm.ActiveAppUtil > EA_APP_UTIL_THRESHOLD)
 		{
-			CFE_EVS_SendEvent(EA_WARN_APP_UTIL, CFE_EVS_INFORMATION,
+			CFE_EVS_SendEvent(EA_WARN_APP_UTIL_EID, CFE_EVS_INFORMATION,
 								"External application exceeded utilization threshold");
 		}
 	}

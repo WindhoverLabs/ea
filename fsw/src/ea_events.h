@@ -97,7 +97,7 @@ typedef enum {
 **  received and processed a command.
 **
 */
-	EA_INF_APP_START,
+	EA_INF_APP_START_EID,
 
 /** \brief <tt> 'EA - Recvd $x cmd (%us)' </tt> TODO
 **  \event <tt> 'EA - Recvd $x cmd (%us)' </tt>
@@ -110,7 +110,20 @@ typedef enum {
 **  received and processed a command.
 **
 */
-	EA_INF_APP_TERM,
+	EA_INF_APP_TERM_EID,
+
+/** \brief <tt> 'EA - Recvd $x cmd (%us)' </tt> TODO
+**  \event <tt> 'EA - Recvd $x cmd (%us)' </tt>
+**
+**  \par Type: INFORMATION
+**
+**  \par Cause:
+**
+**  This event message is issued when the CFS EA Task has
+**  received and processed a command.
+**
+*/
+	EA_APP_ARG_ERR_EID,
 
 /** \brief <tt> 'EA - Recvd $x cmd (%us)' </tt> TODO
 **  \event <tt> 'EA - Recvd $x cmd (%us)' </tt>
@@ -123,7 +136,7 @@ typedef enum {
 **  received and processed a command.
 **
 */
-	EA_WARN_APP_UTIL,
+	EA_WARN_APP_UTIL_EID,
 
 /** \brief <tt> 'EA - ' </tt>
 **  \event <tt> 'EA - ' </tt>
@@ -229,10 +242,18 @@ typedef enum {
     EA_MSGLEN_ERR_EID,
 
 //TODO
-	EA_CHILD_TASK_START,
+	EA_CHILD_TASK_START_EID,
 
 
 	EA_CHILD_TASK_START_ERR_EID,
+
+
+	EA_CMD_NOOP_EID,
+
+
+	EA_CMD_RESET_EID,
+
+
 
 /** \brief <tt> This is a count of all the app events and should not be used. </tt> */
     EA_EVT_CNT
