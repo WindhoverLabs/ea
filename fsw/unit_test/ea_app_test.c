@@ -721,7 +721,7 @@ void Test_EA_ProcessNewAppCmds_StartApp_CreateChildTaskError(void)
 /**
  * Test EA_ProcessNewAppCmds(), Stop App command, Invalid Size
  */
-void Test_EA_ProcessNewAppCmds_StopApp_InvalidSize(void)
+void Test_EA_ProcessNewAppCmds_TermApp_InvalidSize(void)
 {
 	EA_StartCmd_t BadTermCmd;
 
@@ -739,7 +739,7 @@ void Test_EA_ProcessNewAppCmds_StopApp_InvalidSize(void)
 /**
  * Test EA_ProcessNewAppCmds(), Stop App command, None running
  */
-void Test_EA_ProcessNewAppCmds_StopApp_NoneActive(void)
+void Test_EA_ProcessNewAppCmds_TermApp_NoneActive(void)
 {
 	EA_NoArgCmd_t StopCmd;
 
@@ -758,7 +758,7 @@ void Test_EA_ProcessNewAppCmds_StopApp_NoneActive(void)
 /**
  * Test EA_ProcessNewAppCmds(), Stop App command, Nominal
  */
-void Test_EA_ProcessNewAppCmds_StopApp_Nominal(void)
+void Test_EA_ProcessNewAppCmds_TermApp_Nominal(void)
 {
 	EA_NoArgCmd_t StopCmd;
 
@@ -913,11 +913,11 @@ void EA_App_Test_AddTestCases(void)
                        "Test_EA_ProcessNewAppCmds_StartApp_Nominal");
 	UtTest_Add(Test_EA_ProcessNewAppCmds_StartApp_CreateChildTaskError, EA_Test_Setup, EA_Test_TearDown,
                        "Test_EA_ProcessNewAppCmds_StartApp_CreateChildTaskError");
-	UtTest_Add(Test_EA_ProcessNewAppCmds_StopApp_InvalidSize, EA_Test_Setup, EA_Test_TearDown,
+	UtTest_Add(Test_EA_ProcessNewAppCmds_TermApp_InvalidSize, EA_Test_Setup, EA_Test_TearDown,
                        "Test_EA_ProcessNewAppCmds_StopApp_InvalidSize");
-	UtTest_Add(Test_EA_ProcessNewAppCmds_StopApp_NoneActive, EA_Test_Setup, EA_Test_TearDown,
+	UtTest_Add(Test_EA_ProcessNewAppCmds_TermApp_NoneActive, EA_Test_Setup, EA_Test_TearDown,
                        "Test_EA_ProcessNewAppCmds_StopApp_NoneActive");
-	UtTest_Add(Test_EA_ProcessNewAppCmds_StopApp_Nominal, EA_Test_Setup, EA_Test_TearDown,
+	UtTest_Add(Test_EA_ProcessNewAppCmds_TermApp_Nominal, EA_Test_Setup, EA_Test_TearDown,
                        "Test_EA_ProcessNewAppCmds_StopApp_Nominal");
 	UtTest_Add(Test_EA_Perfmon_NoApp, EA_Test_Setup, EA_Test_TearDown,
                        "Test_EA_Perfmon_NoApp");

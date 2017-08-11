@@ -19,6 +19,7 @@ add_airliner_app_unit_test(ea-ut
         ${CMAKE_CURRENT_SOURCE_DIR}/../unit_test/ea_cds_tbl_test.c
         ${CMAKE_CURRENT_SOURCE_DIR}/../unit_test/ea_cmds_test.c
         ${CMAKE_CURRENT_SOURCE_DIR}/../unit_test/ea_config_tbl_test.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/../unit_test/ea_custom_test.c
         ${CMAKE_CURRENT_SOURCE_DIR}/../unit_test/ea_testrunner.c
         ${CMAKE_CURRENT_SOURCE_DIR}/../unit_test/ea_test_utils.c
         ${CMAKE_CURRENT_SOURCE_DIR}/../unit_test/ea_custom_stub.c
