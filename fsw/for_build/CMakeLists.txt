@@ -12,10 +12,12 @@ add_airliner_app_def(ea
 	USER_DOCS   ${CMAKE_CURRENT_SOURCE_DIR}/user_doxy.in
 )
 
+
 add_airliner_app_unit_test(ea-ut
     UTASSERT 
     SOURCES
         ${CMAKE_CURRENT_SOURCE_DIR}/../unit_test/ea_app_test.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/../unit_test/ea_mock_os_calls.c
         ${CMAKE_CURRENT_SOURCE_DIR}/../unit_test/ea_cds_tbl_test.c
         ${CMAKE_CURRENT_SOURCE_DIR}/../unit_test/ea_cmds_test.c
         ${CMAKE_CURRENT_SOURCE_DIR}/../unit_test/ea_config_tbl_test.c
@@ -31,11 +33,19 @@ add_airliner_app_unit_test(ea-ut
     INCLUDES
         ${CMAKE_CURRENT_SOURCE_DIR}/../src/
         ${CMAKE_CURRENT_SOURCE_DIR}/../unit_test/
+
+    PROPERTIES
+    LINK_FLAGS  
+        "-Wl,--wrap,fork"
 )
+
 
 add_custom_target(
     ea-ut-input-files
     COMMAND cp ${CMAKE_CURRENT_SOURCE_DIR}/../unit_test/sleep.py ${CMAKE_CURRENT_BINARY_DIR}
 	COMMAND cp ${CMAKE_CURRENT_SOURCE_DIR}/../unit_test/fib.py ${CMAKE_CURRENT_BINARY_DIR}
+	COMMAND cp ${CMAKE_CURRENT_SOURCE_DIR}/../unit_test/noop.py ${CMAKE_CURRENT_BINARY_DIR}
 )
 add_dependencies(ea-ut ea-ut-input-files)
+
+
