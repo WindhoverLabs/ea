@@ -17,7 +17,7 @@
 #include "ut_cfe_tbl_stubs.h"
 #include "ut_cfe_fs_stubs.h"
 #include "ut_cfe_time_stubs.h"
-#include "ea_mock_os_calls.h"
+//#include "ea_mock_os_calls.h"
 
 //printf("%i\n", Ut_CFE_EVS_GetEventQueueDepth());
 //printf("%i\n", Ut_CFE_EVS_GetEventCount(EA_CHILD_TASK_START_EID, CFE_EVS_DEBUG, ""));
@@ -28,7 +28,7 @@
 //printf("%i\n", EA_AppData.HkTlm.usCmdCnt);
 
 char CUSTOM_APP_PATH[OS_MAX_PATH_LEN] = "/usr/bin/python";
-char CUSTOM_TEST_ARG[OS_MAX_PATH_LEN] = "noop.py";
+char CUSTOM_TEST_ARG[OS_MAX_PATH_LEN] = "/home/vagrant/airliner/apps/ea/fsw/unit_test/noop.py";
 
 int FORK_RET_CODE;
 int EXECVP_RET_CODE;
