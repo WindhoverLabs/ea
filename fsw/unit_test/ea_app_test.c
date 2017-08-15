@@ -18,7 +18,7 @@
 #include "ut_cfe_time_stubs.h"
 
 char APP_PATH[OS_MAX_PATH_LEN] = "/usr/bin/python";
-char TEST_ARG[OS_MAX_PATH_LEN] = "/home/vagrant/airliner/apps/ea/fsw/unit_test/sleep.py";
+char TEST_ARG[OS_MAX_PATH_LEN] = "/home/vagrant/airliner/apps/ea/fsw/unit_test/sleep.py"; // need to specify
 
 int32 hookCalledCount = 0;
 
@@ -713,7 +713,6 @@ void Test_EA_ProcessNewAppCmds_StartApp_Nominal(void)
 
 	/* Execute the function being tested */
 	EA_StartApp((CFE_SB_MsgPtr_t)(&InStartCmd));
-	printf("%i\n", EA_AppData.HkTlm.usCmdCnt);
 	/* Verify results */
 	UtAssert_True(Ut_CFE_EVS_GetEventQueueDepth()==1,"Event Count = 1");
 	UtAssert_EventSent(EA_CHILD_TASK_START_EID, CFE_EVS_DEBUG, "", "Child task started");
@@ -855,7 +854,7 @@ void Test_EA_ProcessNewAppCmds_Perfmon_RcvCmd(void)
 
     CmdPipe = Ut_CFE_SB_CreatePipe("EA_CMD_PIPE");
     CFE_SB_InitMsg (&PerfmonCmd, EA_CMD_MID, sizeof(PerfmonCmd), TRUE);
-    CFE_SB_SetCmdCode((CFE_SB_MsgPtr_t)&PerfmonCmd, EA_TERM_APP_CC);
+    CFE_SB_SetCmdCode((CFE_SB_MsgPtr_t)&PerfmonCmd, EA_PERFMON_CC);
     Ut_CFE_SB_AddMsgToPipe(&PerfmonCmd, CmdPipe);
 
     Ut_CFE_ES_SetReturnCode(UT_CFE_ES_RUNLOOP_INDEX, FALSE, 2);
@@ -864,8 +863,8 @@ void Test_EA_ProcessNewAppCmds_Perfmon_RcvCmd(void)
     EA_AppMain();
 
     /* Verify results */
-    UtAssert_True(Ut_CFE_EVS_GetEventQueueDepth()==4,"Event Count = 4");
-    UtAssert_EventSent(EA_CMD_INF_EID, CFE_EVS_INFORMATION, "Recvd Perfmon App cmd (3)", "Recvd Perfmon App cmd");
+    UtAssert_True(Ut_CFE_EVS_GetEventQueueDepth()==3,"Event Count = 3");
+    UtAssert_EventSent(EA_CMD_INF_EID, CFE_EVS_INFORMATION, "Recvd Perfmon cmd (4)", "Recvd Perfmon App cmd");
 }
 
 /**
