@@ -8,8 +8,6 @@ add_airliner_app_def(ea
    
     INCLUDES
         ${CMAKE_CURRENT_SOURCE_DIR}/../src/
-
-	USER_DOCS   ${CMAKE_CURRENT_SOURCE_DIR}/user_doxy.in
 )
 
 
