@@ -1,4 +1,3 @@
-
 add_airliner_app_def(ea
     FILE EA
     SOURCES
@@ -10,16 +9,13 @@ add_airliner_app_def(ea
         ${CMAKE_CURRENT_SOURCE_DIR}/../src/
 )
 
-
 add_airliner_app_unit_test(ea-ut
     UTASSERT 
     SOURCES
         ${CMAKE_CURRENT_SOURCE_DIR}/../unit_test/ea_app_test.c
-        ${CMAKE_CURRENT_SOURCE_DIR}/../unit_test/ea_mock_os_calls.c
         ${CMAKE_CURRENT_SOURCE_DIR}/../unit_test/ea_cds_tbl_test.c
         ${CMAKE_CURRENT_SOURCE_DIR}/../unit_test/ea_cmds_test.c
         ${CMAKE_CURRENT_SOURCE_DIR}/../unit_test/ea_config_tbl_test.c
-        ${CMAKE_CURRENT_SOURCE_DIR}/../unit_test/ea_custom_test.c
         ${CMAKE_CURRENT_SOURCE_DIR}/../unit_test/ea_testrunner.c
         ${CMAKE_CURRENT_SOURCE_DIR}/../unit_test/ea_test_utils.c
         ${CMAKE_CURRENT_SOURCE_DIR}/../unit_test/ea_custom_stub.c
@@ -31,12 +27,7 @@ add_airliner_app_unit_test(ea-ut
     INCLUDES
         ${CMAKE_CURRENT_SOURCE_DIR}/../src/
         ${CMAKE_CURRENT_SOURCE_DIR}/../unit_test/
-
-    PROPERTIES
-    LINK_FLAGS  
-        "-Wl,--wrap,fork"
 )
-
 
 add_custom_target(
     ea-ut-input-files
