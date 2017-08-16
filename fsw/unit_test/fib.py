@@ -9,9 +9,6 @@ def fib(n):
 	else:
 		return fib(n-1) + fib(n-2)
 
-print "Hello from Python!"
-
 f = fib(40)
-print f
 
 sys.exit(3)
