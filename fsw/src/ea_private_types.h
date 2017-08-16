@@ -23,8 +23,6 @@ extern "C" {
 ** Local Structure Declarations
 *************************************************************************/
 
-/* TODO:  Add more private structure definitions here, if necessary. */
-
 /************************************************************************
 ** External Global Variables
 *************************************************************************/

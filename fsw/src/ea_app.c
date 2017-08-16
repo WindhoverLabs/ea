@@ -167,7 +167,7 @@ int32 EA_InitPipe()
                                  EA_DATA_PIPE_NAME);
     if (iStatus == CFE_SUCCESS)
     {
-        /* TODO:  Add CFE_SB_Subscribe() calls for other apps' output data here.
+        /* Add CFE_SB_Subscribe() calls for other apps' output data here.
         **
         ** Examples:
         **     CFE_SB_Subscribe(GNCEXEC_OUT_DATA_MID, EA_AppData.DataPipeId);
@@ -325,10 +325,6 @@ int32 EA_RcvMsg(int32 iBlocking)
             case EA_WAKEUP_MID:
                 EA_ProcessNewData();
                 EA_ProcessNewCmds();
-                /* TODO:  Add more code here to handle other things when app wakes up */
-
-                /* The last thing to do at the end of this Wakeup cycle should be to
-                 * automatically publish new output. */
                 EA_SendOutData();
                 break;
 
@@ -343,14 +339,14 @@ int32 EA_RcvMsg(int32 iBlocking)
     }
     else if (iStatus == CFE_SB_NO_MESSAGE)
     {
-        /* TODO: If there's no incoming message, you can do something here, or 
+        /* If there's no incoming message, you can do something here, or 
          * nothing.  Note, this section is dead code only if the iBlocking arg
          * is CFE_SB_PEND_FOREVER. */
         iStatus = CFE_SUCCESS;
     }
     else if (iStatus == CFE_SB_TIME_OUT)
     {
-        /* TODO: If there's no incoming message within a specified time (via the
+        /* If there's no incoming message within a specified time (via the
          * iBlocking arg, you can do something here, or nothing.  
          * Note, this section is dead code only if the iBlocking arg
          * is CFE_SB_PEND_FOREVER. */
@@ -358,7 +354,7 @@ int32 EA_RcvMsg(int32 iBlocking)
     }
     else
     {
-        /* TODO: This is an example of exiting on an error (either CFE_SB_BAD_ARGUMENT, or
+        /* This is an example of exiting on an error (either CFE_SB_BAD_ARGUMENT, or
          * CFE_SB_PIPE_RD_ERROR).
          */
         (void) CFE_EVS_SendEvent(EA_PIPE_ERR_EID, CFE_EVS_ERROR,
@@ -390,7 +386,7 @@ void EA_ProcessNewData()
             DataMsgId = CFE_SB_GetMsgId(DataMsgPtr);
             switch (DataMsgId)
             {
-                /* TODO:  Add code to process all subscribed data here
+                /* Add code to process all subscribed data here
                 **
                 ** Example:
                 **     case NAV_OUT_DATA_MID:
@@ -443,7 +439,7 @@ void EA_ProcessNewCmds()
                     EA_ProcessNewAppCmds(CmdMsgPtr);
                     break;
 
-                /* TODO:  Add code to process other subscribed commands here
+                /* Add code to process other subscribed commands here
                 **
                 ** Example:
                 **     case CFE_TIME_DATA_CMD_MID:
@@ -535,9 +531,6 @@ void EA_ProcessNewAppCmds(CFE_SB_Msg_t* MsgPtr)
 				EA_Perfmon();
 				break;
 
-
-            /* TODO:  Add code to process the rest of the EA commands here */
-
             default:
                 EA_AppData.HkTlm.usCmdErrCnt++;
                 (void) CFE_EVS_SendEvent(EA_MSGID_ERR_EID, CFE_EVS_ERROR,
@@ -559,9 +552,7 @@ int32 EA_StartApp(CFE_SB_Msg_t* MsgPtr)
 	uint16              ExpectedLength = sizeof(EA_StartCmd_t);
 	uint32              ChildAppTaskID;
 	int32               Status = CFE_ES_APP_ERROR;
-	EA_StartCmd_t  *CmdPtr = 0;
-	char DEF_INTERPRETER[OS_MAX_PATH_LEN] = "/usr/bin/python";
-	char DEF_SCRIPT[OS_MAX_PATH_LEN] = "/home/vagrant/prototype/ea_proto/fib.py";
+	EA_StartCmd_t       *CmdPtr = 0;
 
 	/* Verify command packet length... */
 	if (EA_VerifyCmdLength (MsgPtr,ExpectedLength))
@@ -569,22 +560,6 @@ int32 EA_StartApp(CFE_SB_Msg_t* MsgPtr)
 		if (EA_AppData.ChildAppTaskInUse == FALSE)
 		{
 			CmdPtr = ((EA_StartCmd_t *) MsgPtr);
-
-			/*
-			** Check if the interpreter string is a nul string
-			*/
-			if(strlen(CmdPtr->interpreter) == 0)
-			{
-				//strcpy(CmdPtr->interpreter, DEF_INTERPRETER);
-			}
-
-			/*
-			** Check if the filename string is a nul string
-			*/
-			if(strlen(CmdPtr->script) == 0)
-			{
-				strcpy(CmdPtr->script, DEF_SCRIPT);
-			}
 
 			/*
 			** NUL terminate the very end of the filename string as a
@@ -599,7 +574,7 @@ int32 EA_StartApp(CFE_SB_Msg_t* MsgPtr)
 			if(access(CmdPtr->interpreter, F_OK ) != -1)
 			{
 				/*
-				** Check if specified script exists
+				** Check if specified script exists - TODO This may be obsolete in the future
 				*/
 				if(access(CmdPtr->script, F_OK ) != -1)
 				{
@@ -695,6 +670,9 @@ void EA_TermApp(CFE_SB_Msg_t* MsgPtr)
 
 void EA_Perfmon()
 {
+    /*
+	** Only run when ActiveAppPID is set to nonzero value.
+	*/
 	if(EA_AppData.HkTlm.ActiveAppPID != 0)
 	{
 		EA_PerfmonCustom(EA_AppData.HkTlm.ActiveAppPID);
@@ -716,13 +694,11 @@ void EA_Perfmon()
 
 void EA_ReportHousekeeping()
 {
-    /* TODO:  Add code to update housekeeping data, if needed, here.  */
-
     CFE_SB_TimeStampMsg((CFE_SB_Msg_t*)&EA_AppData.HkTlm);
     int32 iStatus = CFE_SB_SendMsg((CFE_SB_Msg_t*)&EA_AppData.HkTlm);
     if (iStatus != CFE_SUCCESS)
     {
-        /* TODO: Decide what to do if the send message fails. */
+        /* Decide what to do if the send message fails. */
     }
 }
 
@@ -735,13 +711,11 @@ void EA_ReportHousekeeping()
 
 void EA_SendOutData()
 {
-    /* TODO:  Add code to update output data, if needed, here.  */
-
     CFE_SB_TimeStampMsg((CFE_SB_Msg_t*)&EA_AppData.OutData);
     int32 iStatus = CFE_SB_SendMsg((CFE_SB_Msg_t*)&EA_AppData.OutData);
     if (iStatus != CFE_SUCCESS)
     {
-        /* TODO: Decide what to do if the send message fails. */
+        /* Decide what to do if the send message fails. */
     }
 }
 
@@ -823,9 +797,9 @@ void EA_AppMain()
         int32 iStatus = EA_RcvMsg(EA_SCH_PIPE_PEND_TIME);
         if (iStatus != CFE_SUCCESS)
         {
-        	/* TODO: Decide what to do for other return values in EA_RcvMsg(). */
+        	/* Decide what to do for other return values in EA_RcvMsg(). */
         }
-        EA_Perfmon();
+        EA_Perfmon(); //TODO
         
         iStatus = EA_AcquireConfigPointers();
         if(iStatus != CFE_SUCCESS)

@@ -112,7 +112,7 @@ int32 EA_InitCdsTbl()
 
 void EA_UpdateCdsTbl()
 {
-    /* TODO:  Add code to update values in CDS table here */
+    /* Add code to update values in CDS table here */
 }
 
 
@@ -124,7 +124,7 @@ void EA_UpdateCdsTbl()
 
 void EA_SaveCdsTbl()
 {
-    /* TODO This return value is not checked. Developer should decide what to do here
+    /* This return value is not checked. Developer should decide what to do here
        in case of failure or should add a return value for higher-level logic to handle. */
     CFE_ES_CopyToCDS(EA_AppData.CdsTblHdl, &EA_AppData.CdsTbl);
 }
@@ -132,4 +132,3 @@ void EA_SaveCdsTbl()
 /************************/
 /*  End of File Comment */
 /************************/
-    

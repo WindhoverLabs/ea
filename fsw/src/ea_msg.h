@@ -98,11 +98,11 @@ extern "C" {
 **  \par Command Structure
 **       #EA_StartCmd_t
 **
-**  \par Command Verification TODO
+**  \par Command Verification
 **       Successful execution of this command may be verified with
 **       the following telemetry:
-**       - \b \c \EA_CMDACTPCNT       - command counter will be cleared
-**       - \b \c \EA_CMDRJCTCNT       - command error counter will be cleared
+**       - \b \c \EA_CMDACTPCNT       - command counter will increment
+**       - \b \c \EA_CMDRJCTCNT       
 **       - The #EA_CMD_INF_EID debug event message will be
 **         generated when the command is executed
 **
@@ -117,7 +117,7 @@ extern "C" {
 **  \par Criticality
 **       None
 **
-**  \sa #EA_NOOP_CC
+**  \sa #EA_START_APP_CC
 */
 #define EA_START_APP_CC                (2)
 

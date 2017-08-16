@@ -102,7 +102,7 @@ int32 EA_ValidateConfigTbl(void* ConfigTblPtr)
         goto EA_ValidateConfigTbl_Exit_Tag;
     }
 
-    /* TODO:  Add code to validate new data values here.
+    /* Add code to validate new data values here.
     **
     ** Examples:
     ** if (EA_ConfigTblPtr->iParam <= 16) {
@@ -125,7 +125,7 @@ EA_ValidateConfigTbl_Exit_Tag:
 
 void EA_ProcessNewConfigTbl()
 {
-    /* TODO:  Add code to set new Config parameters with new values here.
+    /* Add code to set new Config parameters with new values here.
     **
     ** Examples:
     **
@@ -146,7 +146,7 @@ int32 EA_AcquireConfigPointers(void)
     /*
     ** Release the table
     */
-    /* TODO: This return value can indicate success, error, or that the info has been 
+    /* This return value can indicate success, error, or that the info has been 
      * updated.  We ignore this return value in favor of checking CFE_TBL_Manage(), but
      * be sure this is the behavior you want. */
     (void) CFE_TBL_ReleaseAddress(EA_AppData.ConfigTblHdl);
@@ -189,4 +189,3 @@ EA_AcquireConfigPointers_Exit_Tag:
 /************************/
 /*  End of File Comment */
 /************************/
-    

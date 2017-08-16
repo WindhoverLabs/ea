@@ -28,7 +28,7 @@ typedef enum {
 **
 **  \par Cause:
 **
-**  TODO fill this in
+**  This event message is a generic information event
 **
 */
     EA_INF_EID,
@@ -86,54 +86,55 @@ typedef enum {
 */
     EA_CMD_INF_EID,
 
-/** \brief <tt> 'EA - Recvd $x cmd (%us)' </tt> TODO
-**  \event <tt> 'EA - Recvd $x cmd (%us)' </tt>
+/** \brief <tt> 'External application started' </tt>
+**  \event <tt> 'External application started' </tt>
 **
 **  \par Type: INFORMATION
 **
 **  \par Cause:
 **
-**  This event message is issued when the CFS EA Task has
-**  received and processed a command.
+**  This event message is issued when an external app
+**  has been started.
 **
 */
 	EA_INF_APP_START_EID,
 
-/** \brief <tt> 'EA - Recvd $x cmd (%us)' </tt> TODO
-**  \event <tt> 'EA - Recvd $x cmd (%us)' </tt>
+/** \brief <tt> 'External application terminated' </tt>
+**  \event <tt> 'External application terminated' </tt>
 **
 **  \par Type: INFORMATION
 **
 **  \par Cause:
 **
-**  This event message is issued when the CFS EA Task has
-**  received and processed a command.
+**  This event message is issued when an external app
+**  has been manually stopped.
 **
 */
 	EA_INF_APP_TERM_EID,
 
-/** \brief <tt> 'EA - Recvd $x cmd (%us)' </tt> TODO
-**  \event <tt> 'EA - Recvd $x cmd (%us)' </tt>
+/** \brief <tt> 'Specified app does not exist' </tt> 
+**  \event <tt> 'Specified app does not exist' </tt>
+**
+**  \par Type: ERROR
+**
+**  \par Cause:
+**
+**  This event message is issued when the specified
+**  external app is unaccessible or does not exist
+**
+*/
+	EA_APP_ARG_ERR_EID,
+
+/** \brief <tt> 'External application exceeded utilization threshold' </tt>
+**  \event <tt> 'External application exceeded utilization threshold' </tt>
 **
 **  \par Type: INFORMATION
 **
 **  \par Cause:
 **
-**  This event message is issued when the CFS EA Task has
-**  received and processed a command.
-**
-*/
-	EA_APP_ARG_ERR_EID,
-
-/** \brief <tt> 'EA - Recvd $x cmd (%us)' </tt> TODO
-**  \event <tt> 'EA - Recvd $x cmd (%us)' </tt>
-**
-**  \par Type: WARNING TODO?
-**
-**  \par Cause:
-**
-**  This event message is issued when the CFS EA Task has
-**  received and processed a command.
+**  This event message is issued when the external app
+**  has exceeded the utilization threshold specified in 
+**  platform config
 **
 */
 	EA_WARN_APP_UTIL_EID,
@@ -241,19 +242,55 @@ typedef enum {
 */
     EA_MSGLEN_ERR_EID,
 
-//TODO
+/** \brief <tt> 'Created child task for app start' </tt>
+**  \event <tt> 'Created child task for app start' </tt>
+**
+**  \par Type: INFORMATION
+**
+**  \par Cause:
+**
+**  This event message is issued when the EA_StartApp function has
+**  successfully created a child task to execute the external app.
+**
+*/
 	EA_CHILD_TASK_START_EID,
 
-
+/** \brief <tt> 'Create child tasked failed. Unable to start external application' </tt>
+**  \event <tt> 'Create child tasked failed. Unable to start external application' </tt>
+**  
+**  \par Type: ERROR
+**
+**  \par Cause:
+**
+**  This event message is issued when the EA_StartApp function has
+**  failed to create a child task to execute the external app.
+**
+*/
 	EA_CHILD_TASK_START_ERR_EID,
 
-
+/** \brief <tt> 'Recvd NOOP cmd (%u), Version %d.%d.%d.%d' </tt>
+**  \event <tt> 'Recvd NOOP cmd (%u), Version %d.%d.%d.%d' </tt>
+**
+**  \par Type: INFORMATION
+**
+**  \par Cause:
+**
+**  This event message is issued when EA has performed a noop command.
+**
+*/
 	EA_CMD_NOOP_EID,
 
-
+/** \brief <tt> 'External application exceeded utilization threshold' </tt>
+**  \event <tt> 'External application exceeded utilization threshold' </tt>
+**
+**  \par Type: INFORMATION
+**
+**  \par Cause:
+**
+**  This event message is issued when EA has performed a reset command.
+**
+*/
 	EA_CMD_RESET_EID,
-
-
 
 /** \brief <tt> This is a count of all the app events and should not be used. </tt> */
     EA_EVT_CNT
@@ -269,4 +306,3 @@ typedef enum {
 /************************/
 /*  End of File Comment */
 /************************/
-    

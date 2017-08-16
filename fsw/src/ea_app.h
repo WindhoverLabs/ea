@@ -103,6 +103,7 @@ typedef struct
 /************************************************************************
 ** External Global Variables
 *************************************************************************/
+extern EA_AppData_t  EA_AppData;
 
 /************************************************************************
 ** Global Variables
@@ -237,64 +238,54 @@ int32  EA_InitPipe(void);
 int32  EA_RcvMsg(int32 iBlocking);
 
 /************************************************************************/
-/** \brief Receive and process messages TODO
+/** \brief Starts External Application
 **
 **  \par Description
-**       This function receives and processes messages
-**       for the EA application
+**       This function creates a child task that will call
+**       the external application
 **
 **  \par Assumptions, External Events, and Notes:
 **       None
 **
-**  \param [in]   iBlocking    A #CFE_SB_PEND_FOREVER, #CFE_SB_POLL or
-**                             millisecond timeout
+**  \param [in]   MsgPtr    A #CFE_SB_Msg_t pointer that
+**                          references the software bus message
 **
 **  \returns
 **  \retcode #CFE_SUCCESS  \retdesc \copydoc CFE_SUCCESS \endcode
-**  \retstmt Return codes from #CFE_SB_RcvMsg            \endcode
+**  \retstmt Return codes from #EA_StartApp            \endcode
 **  \endreturns
 **
 *************************************************************************/
 int32  EA_StartApp(CFE_SB_Msg_t* MsgPtr);
 
 /************************************************************************/
-/** \brief Receive and process messages TODO
+/** \brief Stops External Application
 **
 **  \par Description
-**       This function receives and processes messages
-**       for the EA application
+**       This function terminates execution of the
+         external application and child task
 **
 **  \par Assumptions, External Events, and Notes:
 **       None
 **
-**  \param [in]   iBlocking    A #CFE_SB_PEND_FOREVER, #CFE_SB_POLL or
-**                             millisecond timeout
-**
-**  \returns
-**  \retcode #CFE_SUCCESS  \retdesc \copydoc CFE_SUCCESS \endcode
-**  \retstmt Return codes from #CFE_SB_RcvMsg            \endcode
-**  \endreturns
+**  \param [in]   MsgPtr    A #CFE_SB_Msg_t pointer that
+**                          references the software bus message
 **
 *************************************************************************/
 void  EA_TermApp(CFE_SB_Msg_t* MsgPtr);
 
 /************************************************************************/
-/** \brief Receive and process messages TODO
+/** \brief Calculates External Application CPU Utilization
 **
 **  \par Description
-**       This function receives and processes messages
-**       for the EA application
+**       This function custom code that calculates the CPU
+**       utilization of the external application. If the 
+**       utilization exceeds the specified threshold in 
+**       platform config it sends an event.
 **
 **  \par Assumptions, External Events, and Notes:
-**       None
-**
-**  \param [in]   iBlocking    A #CFE_SB_PEND_FOREVER, #CFE_SB_POLL or
-**                             millisecond timeout
-**
-**  \returns
-**  \retcode #CFE_SUCCESS  \retdesc \copydoc CFE_SUCCESS \endcode
-**  \retstmt Return codes from #CFE_SB_RcvMsg            \endcode
-**  \endreturns
+**       EA_WARN_APP_UTIL_EID will be sent if utiliztion 
+**       exceeds threshold
 **
 *************************************************************************/
 void  EA_Perfmon(void);
@@ -343,15 +334,47 @@ void  EA_SendOutData(void);
 *************************************************************************/
 boolean  EA_VerifyCmdLength(CFE_SB_Msg_t* MsgPtr, uint16 usExpectedLen);
 
-/* TODO:  Add Doxygen markup. */
+/************************************************************************/
+/** \brief Process any data EA has received
+**
+**  \par Description
+**       This function reads data from a pipe and 
+**       takes appropriate actions on it.
+**
+**  \par Assumptions, External Events, and Notes:
+**       None
+**
+*************************************************************************/
 void EA_ProcessNewData(void);
+
+/************************************************************************/
+/** \brief Process any commands EA has received
+**
+**  \par Description
+**       This function reads cmds from a pipe and routes 
+**       them to the appropriate functions
+**
+**  \par Assumptions, External Events, and Notes:
+**       None
+**
+*************************************************************************/
 void EA_ProcessNewCmds(void);
+
+/************************************************************************/
+/** \brief Process any app specific commands EA has received
+**
+**  \par Description
+**       This function receives commands specific to EA
+**       and takes appropriate action on them. 
+**
+**  \par Assumptions, External Events, and Notes:
+**       None
+**
+**  \param [in]   MsgPtr    A #CFE_SB_Msg_t pointer that
+**                          references the software bus message
+**
+*************************************************************************/
 void EA_ProcessNewAppCmds(CFE_SB_Msg_t* MsgPtr);
-
-/* TODO:  Add a section for global externals. */
-extern EA_AppData_t  EA_AppData;
-
-
 
 #ifdef __cplusplus
 }
