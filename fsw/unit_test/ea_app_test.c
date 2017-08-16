@@ -18,7 +18,7 @@
 #include "ut_cfe_time_stubs.h"
 
 char APP_PATH[OS_MAX_PATH_LEN] = "/usr/bin/python";
-char TEST_ARG[OS_MAX_PATH_LEN] = "/home/vagrant/airliner/apps/ea/fsw/unit_test/sleep.py"; // need to specify
+char TEST_ARG[OS_MAX_PATH_LEN] = "noop.py";
 
 int32 hookCalledCount = 0;
 
