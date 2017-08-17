@@ -596,7 +596,7 @@ int32 EA_StartApp(CFE_SB_Msg_t* MsgPtr)
 													0);
 					if (Status == CFE_SUCCESS)
 					{
-						CFE_EVS_SendEvent (EA_CHILD_TASK_START_EID, CFE_EVS_DEBUG, "Created child task for app start.");
+						CFE_EVS_SendEvent (EA_CHILD_TASK_START_EID, CFE_EVS_DEBUG, "Created child task for app start");
 
 						EA_AppData.ChildAppTaskID = ChildAppTaskID;
 					}
@@ -604,7 +604,7 @@ int32 EA_StartApp(CFE_SB_Msg_t* MsgPtr)
 					{
 						CFE_EVS_SendEvent (EA_CHILD_TASK_START_ERR_EID,
 										   CFE_EVS_ERROR,
-										   "Create child tasked failed. Unable to start external application.",
+										   "Create child tasked failed. Unable to start external application",
 										   Status);
 
 						EA_AppData.HkTlm.usCmdErrCnt++;
