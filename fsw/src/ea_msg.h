@@ -93,40 +93,41 @@ extern "C" {
 **  \par Description
 **       Starts external application
 **
-**  \eacmdmnemonic \EA_
-**
 **  \par Command Structure
 **       #EA_StartCmd_t
 **
-**  \par Command Verification TODO
+**  \par Command Verification
 **       Successful execution of this command may be verified with
 **       the following telemetry:
-**       - \b \c \EA_CMDACTPCNT       - command counter will be cleared
-**       - \b \c \EA_CMDRJCTCNT       - command error counter will be cleared
-**       - The #EA_CMD_INF_EID debug event message will be
-**         generated when the command is executed
+**       - \b \c \EA_CMDACTPCNT       - command counter will increment
+**       - The #EA_INF_APP_START_EID info event message will be
+**         generated when the app has started
 **
 **  \par Error Conditions
 **       This command may fail for the following reason(s):
+**       - External app path is already running
+**       - External app path is invalid
+**       - Error starting child task
+**       - Error forking child task
 **       - Command packet length not as expected
 **
 **  \par Evidence of failure may be found in the following telemetry:
 **       - \b \c \EA_CMDRJCTCNT - command error counter will increment
-**       - Error specific event message #EA_MSGID_ERR_EID
+**       - Error specific event message #EA_CMD_ERR_EID
+**       - Error specific event message #EA_CHILD_TASK_START_ERR_EID
+**       - Error specific event message #EA_APP_ARG_ERR_EID
 **
 **  \par Criticality
 **       None
 **
-**  \sa #EA_NOOP_CC
+**  \sa #EA_START_APP_CC
 */
 #define EA_START_APP_CC                (2)
 
-/** \eacmd Reset Counters TODO
+/** \eacmd Terminate Application
 **
 **  \par Description
-**       Resets the ea housekeeping counters
-**
-**  \eacmdmnemonic \EA_TLMRST
+**       Stops external application
 **
 **  \par Command Structure
 **       #EA_NoArgCmd_t
@@ -134,32 +135,31 @@ extern "C" {
 **  \par Command Verification
 **       Successful execution of this command may be verified with
 **       the following telemetry:
-**       - \b \c \EA_CMDACTPCNT       - command counter will be cleared
-**       - \b \c \EA_CMDRJCTCNT       - command error counter will be cleared
-**       - The #EA_CMD_INF_EID debug event message will be
-**         generated when the command is executed
+**       - \b \c \EA_CMDACTPCNT       - command counter will increment
+**       - The #EA_INF_APP_TERM_EID debug event message will be
+**         generated when the app has stopped
 **
 **  \par Error Conditions
 **       This command may fail for the following reason(s):
 **       - Command packet length not as expected
+**       - No active running external app
+**       - Error executing kill
 **
 **  \par Evidence of failure may be found in the following telemetry:
 **       - \b \c \EA_CMDRJCTCNT - command error counter will increment
-**       - Error specific event message #EA_MSGID_ERR_EID
+**       - Error specific event message #EA_CMD_ERR_EID
 **
 **  \par Criticality
 **       None
 **
-**  \sa #EA_NOOP_CC
+**  \sa #EA_TERM_APP_CC
 */
 #define EA_TERM_APP_CC                (3)
 
-/** \eacmd Reset Counters TODO
+/** \eacmd Perfmon
 **
 **  \par Description
-**       Resets the ea housekeeping counters
-**
-**  \eacmdmnemonic \EA_TLMRST
+**       Calculates the CPU utilization of the external application
 **
 **  \par Command Structure
 **       #EA_NoArgCmd_t
@@ -167,23 +167,19 @@ extern "C" {
 **  \par Command Verification
 **       Successful execution of this command may be verified with
 **       the following telemetry:
-**       - \b \c \EA_CMDACTPCNT       - command counter will be cleared
-**       - \b \c \EA_CMDRJCTCNT       - command error counter will be cleared
-**       - The #EA_CMD_INF_EID debug event message will be
-**         generated when the command is executed
+**       - \b \c \EA_CMDACTPCNT       - command counter will increment
 **
 **  \par Error Conditions
 **       This command may fail for the following reason(s):
-**       - Command packet length not as expected
+**       - Error parsing proc tree
 **
 **  \par Evidence of failure may be found in the following telemetry:
-**       - \b \c \EA_CMDRJCTCNT - command error counter will increment
-**       - Error specific event message #EA_MSGID_ERR_EID
+**       - ActiveAppUtil will not be a valid number TODO
 **
 **  \par Criticality
 **       None
 **
-**  \sa #EA_NOOP_CC
+**  \sa #EA_PERFMON_CC
 */
 #define EA_PERFMON_CC                (4)
 
@@ -203,10 +199,9 @@ typedef struct
     uint8  ucCmdHeader[CFE_SB_CMD_HDR_SIZE];
 } EA_NoArgCmd_t;
 
-/** TODO
-**  \brief No Arguments Command
-**  For command details see #EA_NOOP_CC, #EA_RESET_CC
-**  Also see #EA_SEND_HK_MID
+/** 
+**  \brief Start Command
+**  For command details see #EA_START_APP_CC
 */
 typedef struct
 {
@@ -217,7 +212,7 @@ typedef struct
 } EA_StartCmd_t;
 
 /** 
-**  \brief TODO Elaborate this struct
+**  \brief 
 **  Boilerplate example of application-specific incoming data
 */
 typedef struct
@@ -225,7 +220,7 @@ typedef struct
     uint8   TlmHeader[CFE_SB_TLM_HDR_SIZE];
     uint32  counter;
 
-    /* TODO:  Add input data to this application here, such as raw data read from I/O
+    /*        Add input data to this application here, such as raw data read from I/O
     **        devices.
     **        Option: for data that is already defined by another app, include
     **        that app's message header above.
@@ -234,7 +229,7 @@ typedef struct
 } EA_InData_t;
 
 /** 
-**  \brief TODO Elaborate this struct
+**  \brief 
 **  Boilerplate example of application-specific outgoing data
 */
 typedef struct
@@ -268,10 +263,6 @@ typedef struct
     float			   ActiveAppUtil;
 
     /** \eatlmmnemonic \EA_
-    		\brief Padding to correctly allign */
-    //uint8				padding;
-
-    /** \eatlmmnemonic \EA_
 		\brief PID of current running application */
     int32			   ActiveAppPID;
 
@@ -286,8 +277,9 @@ typedef struct
 } EA_HkTlm_t;
 
 /**
-**  \brief TODO Elaborate this struct
-**  Boilerplate example of application-specific outgoing data
+**  \brief 
+**  Data that is utilized by the start command child task
+**  Also see #EA_START_APP_CC
 */
 typedef struct
 {

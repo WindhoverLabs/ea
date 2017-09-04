@@ -28,7 +28,7 @@ typedef struct
 } EA_ProcData_t;
 
 /************************************************************************/
-/** \brief Initialize Child task and start external application
+/** \brief Initialize Child Task and Start External Application
 **
 **  \par Description
 **       This function spawns a CFS child task that will then call the
@@ -38,15 +38,55 @@ typedef struct
 **       child task completes the parent will capture its return code
 **       and update all relevant HK telemetry.
 **
-**
 **  \par Assumptions, External Events, and Notes:
 **       None
 **
 *************************************************************************/
 void EA_StartAppCustom();
 
+/************************************************************************/
+/** \brief Terminate Child task and Stop External Application
+**
+**  \par Description
+**       This function kills the CFS child task and the external 
+**       application. The HK telemetry for ActiveApp is copied to 
+**       LastRunApp and LastAppStatus is set to -1. All other relevant
+**       HK telemetry is reset to default values
+**
+**  \par Assumptions, External Events, and Notes:
+**       None
+**
+*************************************************************************/
 void EA_TermAppCustom();
+
+/************************************************************************/
+/** \brief Performance Monitoring
+**
+**  \par Description
+**       This function uses a helper function to calculate the CPU
+**       utilization of the external application. Once the helper returns
+**       HK telemetry is updated to current value.
+**
+**  \par Assumptions, External Events, and Notes:
+**       None
+**
+*************************************************************************/
 void EA_PerfmonCustom(int32 pid);
+
+/************************************************************************/
+/** \brief Initialize Child task and start external application
+**
+**  \par Description
+**       This function reads from the proc tree and calculates the 
+**       percentage of the CPU time the app is using. EA_APP_NUM_THREADS
+**       in platform config needs to be set to the correct amount of
+**       threads the app will run on for util to be a valid number 
+**       between 0-100.
+**
+**  \par Assumptions, External Events, and Notes:
+**       None
+**
+*************************************************************************/
 EA_ProcData_t EA_ParsePidUtil(int32 pid);
 
 #endif

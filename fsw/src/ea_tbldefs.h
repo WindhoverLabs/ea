@@ -42,7 +42,7 @@ typedef struct
 {
     int32  iParam;
 
-    /* TODO:  Add type declaration for config parameters here.
+    /* Add type declaration for config parameters here.
     **
     ** Examples:
     **    int8/char            cParam;
@@ -74,7 +74,7 @@ typedef struct
 {
     int32  iParam;
 
-    /* TODO:  Add type declaration for CDS data here. */
+    /* Add type declaration for CDS data here. */
 } EA_CdsTbl_t;
 
 /************************************************************************

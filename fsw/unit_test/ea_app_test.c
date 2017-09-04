@@ -713,6 +713,7 @@ void Test_EA_ProcessNewAppCmds_StartApp_Nominal(void)
 
 	/* Execute the function being tested */
 	EA_StartApp((CFE_SB_MsgPtr_t)(&InStartCmd));
+
 	/* Verify results */
 	UtAssert_True(Ut_CFE_EVS_GetEventQueueDepth()==1,"Event Count = 1");
 	UtAssert_EventSent(EA_CHILD_TASK_START_EID, CFE_EVS_DEBUG, "", "Child task started");
@@ -1022,5 +1023,4 @@ void EA_App_Test_AddTestCases(void)
 		                       "Test_EA_ProcessNewAppCmds_TermApp_RcvCmd");
 	UtTest_Add(Test_EA_ProcessNewAppCmds_Perfmon_RcvCmd, EA_Test_Setup, EA_Test_TearDown,
 			                       "Test_EA_ProcessNewAppCmds_Perfmon_RcvCmd");
-
 }
