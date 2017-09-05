@@ -62,3 +62,17 @@ add_custom_target(
 	COMMAND cp ${CMAKE_CURRENT_SOURCE_DIR}/../unit_test/noop.py ${CMAKE_CURRENT_BINARY_DIR}
 )
 add_dependencies(ea-ut ea-ut-input-files)
+
+set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE BOTH)
+
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/../src/nanopb/extra")
+find_package(Nanopb REQUIRED)
+include_directories(${NANOPB_INCLUDE_DIRS})
+
+FILE(GLOB proto_files "${CMAKE_CURRENT_SOURCE_DIR}/../src/*.proto")
+nanopb_generate_cpp(PROTO_SRCS PROTO_HDRS ${CMAKE_CURRENT_SOURCE_DIR}/../src/*.proto)
+
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+set_source_files_properties(${PROTO_SRCS} ${PROTO_HDRS}
+    PROPERTIES GENERATED TRUE)
+
