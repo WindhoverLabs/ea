@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 project(NANOPB_CMAKE_SIMPLE C)
 
-set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../nanopb/extra)
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../../tools/nanopb/extra)
 find_package(Nanopb REQUIRED)
 include_directories(${NANOPB_INCLUDE_DIRS})
 

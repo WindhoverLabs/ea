@@ -67,7 +67,7 @@ add_dependencies(ea-ut ea-ut-input-files)
 
 set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE BOTH)
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/../src/nanopb/extra")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/../tools/nanopb/extra")
 find_package(Nanopb REQUIRED)
 include_directories(${NANOPB_INCLUDE_DIRS})
 
