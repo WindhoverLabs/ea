@@ -1,0 +1,6 @@
+# Hashes of file build rules.
+0b89fcfb4ef85bbf91d22acce5a5a506 ea_start.pb
+8e5703ad3caab7a3a08833a7c5dd0560 ea_start.pb.c
+e125dd1d5876031d0a8f0d8d62f0769b nanopb/generator/nanopb_generator.py
+abacf6486913baa9d1a35407e9871804 nanopb/generator/proto/nanopb_pb2.py
+5fa6ce4c0a7d183ce519651ac72dd168 nanopb/generator/proto/plugin_pb2.py

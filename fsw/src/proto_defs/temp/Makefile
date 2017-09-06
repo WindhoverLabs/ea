@@ -110,6 +110,127 @@ depend:
 	$(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
+#=============================================================================
+# Target rules for targets named simple
+
+# Build rule for target.
+simple: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 simple
+.PHONY : simple
+
+# fast build rule for target.
+simple/fast:
+	$(MAKE) -f CMakeFiles/simple.dir/build.make CMakeFiles/simple.dir/build
+.PHONY : simple/fast
+
+ea_start.pb.o: ea_start.pb.c.o
+
+.PHONY : ea_start.pb.o
+
+# target to build an object file
+ea_start.pb.c.o:
+	$(MAKE) -f CMakeFiles/simple.dir/build.make CMakeFiles/simple.dir/ea_start.pb.c.o
+.PHONY : ea_start.pb.c.o
+
+ea_start.pb.i: ea_start.pb.c.i
+
+.PHONY : ea_start.pb.i
+
+# target to preprocess a source file
+ea_start.pb.c.i:
+	$(MAKE) -f CMakeFiles/simple.dir/build.make CMakeFiles/simple.dir/ea_start.pb.c.i
+.PHONY : ea_start.pb.c.i
+
+ea_start.pb.s: ea_start.pb.c.s
+
+.PHONY : ea_start.pb.s
+
+# target to generate assembly for a file
+ea_start.pb.c.s:
+	$(MAKE) -f CMakeFiles/simple.dir/build.make CMakeFiles/simple.dir/ea_start.pb.c.s
+.PHONY : ea_start.pb.c.s
+
+home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_common.o: home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_common.c.o
+
+.PHONY : home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_common.o
+
+# target to build an object file
+home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_common.c.o:
+	$(MAKE) -f CMakeFiles/simple.dir/build.make CMakeFiles/simple.dir/home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_common.c.o
+.PHONY : home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_common.c.o
+
+home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_common.i: home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_common.c.i
+
+.PHONY : home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_common.i
+
+# target to preprocess a source file
+home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_common.c.i:
+	$(MAKE) -f CMakeFiles/simple.dir/build.make CMakeFiles/simple.dir/home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_common.c.i
+.PHONY : home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_common.c.i
+
+home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_common.s: home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_common.c.s
+
+.PHONY : home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_common.s
+
+# target to generate assembly for a file
+home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_common.c.s:
+	$(MAKE) -f CMakeFiles/simple.dir/build.make CMakeFiles/simple.dir/home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_common.c.s
+.PHONY : home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_common.c.s
+
+home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_decode.o: home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_decode.c.o
+
+.PHONY : home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_decode.o
+
+# target to build an object file
+home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_decode.c.o:
+	$(MAKE) -f CMakeFiles/simple.dir/build.make CMakeFiles/simple.dir/home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_decode.c.o
+.PHONY : home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_decode.c.o
+
+home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_decode.i: home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_decode.c.i
+
+.PHONY : home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_decode.i
+
+# target to preprocess a source file
+home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_decode.c.i:
+	$(MAKE) -f CMakeFiles/simple.dir/build.make CMakeFiles/simple.dir/home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_decode.c.i
+.PHONY : home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_decode.c.i
+
+home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_decode.s: home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_decode.c.s
+
+.PHONY : home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_decode.s
+
+# target to generate assembly for a file
+home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_decode.c.s:
+	$(MAKE) -f CMakeFiles/simple.dir/build.make CMakeFiles/simple.dir/home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_decode.c.s
+.PHONY : home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_decode.c.s
+
+home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_encode.o: home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_encode.c.o
+
+.PHONY : home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_encode.o
+
+# target to build an object file
+home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_encode.c.o:
+	$(MAKE) -f CMakeFiles/simple.dir/build.make CMakeFiles/simple.dir/home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_encode.c.o
+.PHONY : home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_encode.c.o
+
+home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_encode.i: home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_encode.c.i
+
+.PHONY : home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_encode.i
+
+# target to preprocess a source file
+home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_encode.c.i:
+	$(MAKE) -f CMakeFiles/simple.dir/build.make CMakeFiles/simple.dir/home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_encode.c.i
+.PHONY : home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_encode.c.i
+
+home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_encode.s: home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_encode.c.s
+
+.PHONY : home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_encode.s
+
+# target to generate assembly for a file
+home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_encode.c.s:
+	$(MAKE) -f CMakeFiles/simple.dir/build.make CMakeFiles/simple.dir/home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_encode.c.s
+.PHONY : home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_encode.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -118,6 +239,19 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... simple"
+	@echo "... ea_start.pb.o"
+	@echo "... ea_start.pb.i"
+	@echo "... ea_start.pb.s"
+	@echo "... home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_common.o"
+	@echo "... home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_common.i"
+	@echo "... home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_common.s"
+	@echo "... home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_decode.o"
+	@echo "... home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_decode.i"
+	@echo "... home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_decode.s"
+	@echo "... home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_encode.o"
+	@echo "... home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_encode.i"
+	@echo "... home/vagrant/airliner/apps/ea/fsw/src/nanopb/pb_encode.s"
 .PHONY : help
 
 

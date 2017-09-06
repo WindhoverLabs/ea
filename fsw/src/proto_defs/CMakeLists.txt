@@ -16,4 +16,4 @@ set_source_files_properties(${PROTO_SRCS} ${PROTO_HDRS}
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Werror -g -O0")
 
-#add_executable(simple ${PROTO_SRCS} ${PROTO_HDRS})
+add_executable(simple ${PROTO_SRCS} ${PROTO_HDRS})

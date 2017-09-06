@@ -1,10 +1,15 @@
+#include "ea_serialization.h"
+
 uint32 EA_StartApp_Enc(const EA_StartCmd_t *inObject, char *inOutBuffer, uint32 inSize)
 {
 	bool status = false;
 	ea_start_pb pbMsg;
 	
-	pbMsg.interpreter = inObject->interpreter;
-	pbMsg.script = inObject->script;
+	//pbMsg.interpreter = inObject->interpreter;
+	//pbMsg.script = inObject->script;
+    //strcpy(pbMsg.interpreter, inObject->interpreter);
+    //strcpy(pbMsg.script, inObject->script);
+
 
 	/* Create a stream that will write to our buffer. */
 	pb_ostream_t stream = pb_ostream_from_buffer((pb_byte_t *)inOutBuffer, inSize);
@@ -37,9 +42,9 @@ uint32 EA_StartApp_Dec(const char *inBuffer, uint32 inSize, EA_StartCmd_t *inOut
 		return 0;
 	}
 	
-	inOutObject->interpreter = pbMsg.interpreter;
-	inOutObject->script = pbMsg.script;
+	//inOutObject->interpreter = pbMsg.interpreter;
+	//inOutObject->script = pbMsg.script;
 
 
-	return sizeof(PX4_SensorAccelMsg_t);
+	return sizeof(EA_StartCmd_t);
 }

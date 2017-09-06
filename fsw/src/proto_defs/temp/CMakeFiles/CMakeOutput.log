@@ -15,28 +15,28 @@ The C compiler identification is GNU, found in "/home/vagrant/airliner/apps/ea/f
 Determining if the C compiler works passed with the following output:
 Change Dir: /home/vagrant/airliner/apps/ea/fsw/src/proto_defs/temp/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_72989/fast"
-/usr/bin/make -f CMakeFiles/cmTC_72989.dir/build.make CMakeFiles/cmTC_72989.dir/build
+Run Build Command:"/usr/bin/make" "cmTC_a6ab2/fast"
+/usr/bin/make -f CMakeFiles/cmTC_a6ab2.dir/build.make CMakeFiles/cmTC_a6ab2.dir/build
 make[1]: Entering directory '/home/vagrant/airliner/apps/ea/fsw/src/proto_defs/temp/CMakeFiles/CMakeTmp'
-Building C object CMakeFiles/cmTC_72989.dir/testCCompiler.c.o
-/usr/bin/cc     -o CMakeFiles/cmTC_72989.dir/testCCompiler.c.o   -c /home/vagrant/airliner/apps/ea/fsw/src/proto_defs/temp/CMakeFiles/CMakeTmp/testCCompiler.c
-Linking C executable cmTC_72989
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_72989.dir/link.txt --verbose=1
-/usr/bin/cc       CMakeFiles/cmTC_72989.dir/testCCompiler.c.o  -o cmTC_72989 -rdynamic 
+Building C object CMakeFiles/cmTC_a6ab2.dir/testCCompiler.c.o
+/usr/bin/cc     -o CMakeFiles/cmTC_a6ab2.dir/testCCompiler.c.o   -c /home/vagrant/airliner/apps/ea/fsw/src/proto_defs/temp/CMakeFiles/CMakeTmp/testCCompiler.c
+Linking C executable cmTC_a6ab2
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_a6ab2.dir/link.txt --verbose=1
+/usr/bin/cc       CMakeFiles/cmTC_a6ab2.dir/testCCompiler.c.o  -o cmTC_a6ab2 -rdynamic 
 make[1]: Leaving directory '/home/vagrant/airliner/apps/ea/fsw/src/proto_defs/temp/CMakeFiles/CMakeTmp'
 
 
 Detecting C compiler ABI info compiled with the following output:
 Change Dir: /home/vagrant/airliner/apps/ea/fsw/src/proto_defs/temp/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_d7625/fast"
-/usr/bin/make -f CMakeFiles/cmTC_d7625.dir/build.make CMakeFiles/cmTC_d7625.dir/build
+Run Build Command:"/usr/bin/make" "cmTC_34d70/fast"
+/usr/bin/make -f CMakeFiles/cmTC_34d70.dir/build.make CMakeFiles/cmTC_34d70.dir/build
 make[1]: Entering directory '/home/vagrant/airliner/apps/ea/fsw/src/proto_defs/temp/CMakeFiles/CMakeTmp'
-Building C object CMakeFiles/cmTC_d7625.dir/CMakeCCompilerABI.c.o
-/usr/bin/cc     -o CMakeFiles/cmTC_d7625.dir/CMakeCCompilerABI.c.o   -c /usr/share/cmake-3.5/Modules/CMakeCCompilerABI.c
-Linking C executable cmTC_d7625
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_d7625.dir/link.txt --verbose=1
-/usr/bin/cc      -v CMakeFiles/cmTC_d7625.dir/CMakeCCompilerABI.c.o  -o cmTC_d7625 -rdynamic  
+Building C object CMakeFiles/cmTC_34d70.dir/CMakeCCompilerABI.c.o
+/usr/bin/cc     -o CMakeFiles/cmTC_34d70.dir/CMakeCCompilerABI.c.o   -c /usr/share/cmake-3.5/Modules/CMakeCCompilerABI.c
+Linking C executable cmTC_34d70
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_34d70.dir/link.txt --verbose=1
+/usr/bin/cc      -v CMakeFiles/cmTC_34d70.dir/CMakeCCompilerABI.c.o  -o cmTC_34d70 -rdynamic  
 Using built-in specs.
 COLLECT_GCC=/usr/bin/cc
 COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-linux-gnu/5/lto-wrapper
@@ -46,8 +46,8 @@ Thread model: posix
 gcc version 5.4.0 20160609 (Ubuntu 5.4.0-6ubuntu1~16.04.4) 
 COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/5/:/usr/lib/gcc/x86_64-linux-gnu/5/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/5/:/usr/lib/gcc/x86_64-linux-gnu/
 LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/5/:/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/5/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/5/../../../:/lib/:/usr/lib/
-COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_d7625' '-rdynamic' '-mtune=generic' '-march=x86-64'
- /usr/lib/gcc/x86_64-linux-gnu/5/collect2 -plugin /usr/lib/gcc/x86_64-linux-gnu/5/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/5/lto-wrapper -plugin-opt=-fresolution=/tmp/ccEtlao2.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --sysroot=/ --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -export-dynamic -dynamic-linker /lib64/ld-linux-x86-64.so.2 -z relro -o cmTC_d7625 /usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crt1.o /usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/5/crtbegin.o -L/usr/lib/gcc/x86_64-linux-gnu/5 -L/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/5/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/5/../../.. CMakeFiles/cmTC_d7625.dir/CMakeCCompilerABI.c.o -lgcc --as-needed -lgcc_s --no-as-needed -lc -lgcc --as-needed -lgcc_s --no-as-needed /usr/lib/gcc/x86_64-linux-gnu/5/crtend.o /usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crtn.o
+COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_34d70' '-rdynamic' '-mtune=generic' '-march=x86-64'
+ /usr/lib/gcc/x86_64-linux-gnu/5/collect2 -plugin /usr/lib/gcc/x86_64-linux-gnu/5/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/5/lto-wrapper -plugin-opt=-fresolution=/tmp/ccyvsT0B.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --sysroot=/ --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -export-dynamic -dynamic-linker /lib64/ld-linux-x86-64.so.2 -z relro -o cmTC_34d70 /usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crt1.o /usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/5/crtbegin.o -L/usr/lib/gcc/x86_64-linux-gnu/5 -L/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/5/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/5/../../.. CMakeFiles/cmTC_34d70.dir/CMakeCCompilerABI.c.o -lgcc --as-needed -lgcc_s --no-as-needed -lc -lgcc --as-needed -lgcc_s --no-as-needed /usr/lib/gcc/x86_64-linux-gnu/5/crtend.o /usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crtn.o
 make[1]: Leaving directory '/home/vagrant/airliner/apps/ea/fsw/src/proto_defs/temp/CMakeFiles/CMakeTmp'
 
 
@@ -55,14 +55,14 @@ Parsed C implicit link information from above output:
   link line regex: [^( *|.*[/\])(ld|([^/\]+-)?ld|collect2)[^/\]*( |$)]
   ignore line: [Change Dir: /home/vagrant/airliner/apps/ea/fsw/src/proto_defs/temp/CMakeFiles/CMakeTmp]
   ignore line: []
-  ignore line: [Run Build Command:"/usr/bin/make" "cmTC_d7625/fast"]
-  ignore line: [/usr/bin/make -f CMakeFiles/cmTC_d7625.dir/build.make CMakeFiles/cmTC_d7625.dir/build]
+  ignore line: [Run Build Command:"/usr/bin/make" "cmTC_34d70/fast"]
+  ignore line: [/usr/bin/make -f CMakeFiles/cmTC_34d70.dir/build.make CMakeFiles/cmTC_34d70.dir/build]
   ignore line: [make[1]: Entering directory '/home/vagrant/airliner/apps/ea/fsw/src/proto_defs/temp/CMakeFiles/CMakeTmp']
-  ignore line: [Building C object CMakeFiles/cmTC_d7625.dir/CMakeCCompilerABI.c.o]
-  ignore line: [/usr/bin/cc     -o CMakeFiles/cmTC_d7625.dir/CMakeCCompilerABI.c.o   -c /usr/share/cmake-3.5/Modules/CMakeCCompilerABI.c]
-  ignore line: [Linking C executable cmTC_d7625]
-  ignore line: [/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_d7625.dir/link.txt --verbose=1]
-  ignore line: [/usr/bin/cc      -v CMakeFiles/cmTC_d7625.dir/CMakeCCompilerABI.c.o  -o cmTC_d7625 -rdynamic  ]
+  ignore line: [Building C object CMakeFiles/cmTC_34d70.dir/CMakeCCompilerABI.c.o]
+  ignore line: [/usr/bin/cc     -o CMakeFiles/cmTC_34d70.dir/CMakeCCompilerABI.c.o   -c /usr/share/cmake-3.5/Modules/CMakeCCompilerABI.c]
+  ignore line: [Linking C executable cmTC_34d70]
+  ignore line: [/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_34d70.dir/link.txt --verbose=1]
+  ignore line: [/usr/bin/cc      -v CMakeFiles/cmTC_34d70.dir/CMakeCCompilerABI.c.o  -o cmTC_34d70 -rdynamic  ]
   ignore line: [Using built-in specs.]
   ignore line: [COLLECT_GCC=/usr/bin/cc]
   ignore line: [COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-linux-gnu/5/lto-wrapper]
@@ -72,13 +72,13 @@ Parsed C implicit link information from above output:
   ignore line: [gcc version 5.4.0 20160609 (Ubuntu 5.4.0-6ubuntu1~16.04.4) ]
   ignore line: [COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/5/:/usr/lib/gcc/x86_64-linux-gnu/5/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/5/:/usr/lib/gcc/x86_64-linux-gnu/]
   ignore line: [LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/5/:/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/5/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/5/../../../:/lib/:/usr/lib/]
-  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_d7625' '-rdynamic' '-mtune=generic' '-march=x86-64']
-  link line: [ /usr/lib/gcc/x86_64-linux-gnu/5/collect2 -plugin /usr/lib/gcc/x86_64-linux-gnu/5/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/5/lto-wrapper -plugin-opt=-fresolution=/tmp/ccEtlao2.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --sysroot=/ --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -export-dynamic -dynamic-linker /lib64/ld-linux-x86-64.so.2 -z relro -o cmTC_d7625 /usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crt1.o /usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/5/crtbegin.o -L/usr/lib/gcc/x86_64-linux-gnu/5 -L/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/5/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/5/../../.. CMakeFiles/cmTC_d7625.dir/CMakeCCompilerABI.c.o -lgcc --as-needed -lgcc_s --no-as-needed -lc -lgcc --as-needed -lgcc_s --no-as-needed /usr/lib/gcc/x86_64-linux-gnu/5/crtend.o /usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crtn.o]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_34d70' '-rdynamic' '-mtune=generic' '-march=x86-64']
+  link line: [ /usr/lib/gcc/x86_64-linux-gnu/5/collect2 -plugin /usr/lib/gcc/x86_64-linux-gnu/5/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/5/lto-wrapper -plugin-opt=-fresolution=/tmp/ccyvsT0B.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --sysroot=/ --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -export-dynamic -dynamic-linker /lib64/ld-linux-x86-64.so.2 -z relro -o cmTC_34d70 /usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crt1.o /usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/5/crtbegin.o -L/usr/lib/gcc/x86_64-linux-gnu/5 -L/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/5/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/5/../../.. CMakeFiles/cmTC_34d70.dir/CMakeCCompilerABI.c.o -lgcc --as-needed -lgcc_s --no-as-needed -lc -lgcc --as-needed -lgcc_s --no-as-needed /usr/lib/gcc/x86_64-linux-gnu/5/crtend.o /usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crtn.o]
     arg [/usr/lib/gcc/x86_64-linux-gnu/5/collect2] ==> ignore
     arg [-plugin] ==> ignore
     arg [/usr/lib/gcc/x86_64-linux-gnu/5/liblto_plugin.so] ==> ignore
     arg [-plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/5/lto-wrapper] ==> ignore
-    arg [-plugin-opt=-fresolution=/tmp/ccEtlao2.res] ==> ignore
+    arg [-plugin-opt=-fresolution=/tmp/ccyvsT0B.res] ==> ignore
     arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
     arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
     arg [-plugin-opt=-pass-through=-lc] ==> ignore
@@ -96,7 +96,7 @@ Parsed C implicit link information from above output:
     arg [/lib64/ld-linux-x86-64.so.2] ==> ignore
     arg [-zrelro] ==> ignore
     arg [-o] ==> ignore
-    arg [cmTC_d7625] ==> ignore
+    arg [cmTC_34d70] ==> ignore
     arg [/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crt1.o] ==> ignore
     arg [/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crti.o] ==> ignore
     arg [/usr/lib/gcc/x86_64-linux-gnu/5/crtbegin.o] ==> ignore
@@ -108,7 +108,7 @@ Parsed C implicit link information from above output:
     arg [-L/usr/lib/x86_64-linux-gnu] ==> dir [/usr/lib/x86_64-linux-gnu]
     arg [-L/usr/lib/../lib] ==> dir [/usr/lib/../lib]
     arg [-L/usr/lib/gcc/x86_64-linux-gnu/5/../../..] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/5/../../..]
-    arg [CMakeFiles/cmTC_d7625.dir/CMakeCCompilerABI.c.o] ==> ignore
+    arg [CMakeFiles/cmTC_34d70.dir/CMakeCCompilerABI.c.o] ==> ignore
     arg [-lgcc] ==> lib [gcc]
     arg [--as-needed] ==> ignore
     arg [-lgcc_s] ==> lib [gcc_s]
@@ -142,14 +142,14 @@ Parsed C implicit link information from above output:
 Detecting C [-std=c11] compiler features compiled with the following output:
 Change Dir: /home/vagrant/airliner/apps/ea/fsw/src/proto_defs/temp/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_50a58/fast"
-/usr/bin/make -f CMakeFiles/cmTC_50a58.dir/build.make CMakeFiles/cmTC_50a58.dir/build
+Run Build Command:"/usr/bin/make" "cmTC_a960e/fast"
+/usr/bin/make -f CMakeFiles/cmTC_a960e.dir/build.make CMakeFiles/cmTC_a960e.dir/build
 make[1]: Entering directory '/home/vagrant/airliner/apps/ea/fsw/src/proto_defs/temp/CMakeFiles/CMakeTmp'
-Building C object CMakeFiles/cmTC_50a58.dir/feature_tests.c.o
-/usr/bin/cc    -std=c11 -o CMakeFiles/cmTC_50a58.dir/feature_tests.c.o   -c /home/vagrant/airliner/apps/ea/fsw/src/proto_defs/temp/CMakeFiles/feature_tests.c
-Linking C executable cmTC_50a58
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_50a58.dir/link.txt --verbose=1
-/usr/bin/cc       CMakeFiles/cmTC_50a58.dir/feature_tests.c.o  -o cmTC_50a58 -rdynamic 
+Building C object CMakeFiles/cmTC_a960e.dir/feature_tests.c.o
+/usr/bin/cc    -std=c11 -o CMakeFiles/cmTC_a960e.dir/feature_tests.c.o   -c /home/vagrant/airliner/apps/ea/fsw/src/proto_defs/temp/CMakeFiles/feature_tests.c
+Linking C executable cmTC_a960e
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_a960e.dir/link.txt --verbose=1
+/usr/bin/cc       CMakeFiles/cmTC_a960e.dir/feature_tests.c.o  -o cmTC_a960e -rdynamic 
 make[1]: Leaving directory '/home/vagrant/airliner/apps/ea/fsw/src/proto_defs/temp/CMakeFiles/CMakeTmp'
 
 
@@ -162,14 +162,14 @@ make[1]: Leaving directory '/home/vagrant/airliner/apps/ea/fsw/src/proto_defs/te
 Detecting C [-std=c99] compiler features compiled with the following output:
 Change Dir: /home/vagrant/airliner/apps/ea/fsw/src/proto_defs/temp/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_71aee/fast"
-/usr/bin/make -f CMakeFiles/cmTC_71aee.dir/build.make CMakeFiles/cmTC_71aee.dir/build
+Run Build Command:"/usr/bin/make" "cmTC_e2e6c/fast"
+/usr/bin/make -f CMakeFiles/cmTC_e2e6c.dir/build.make CMakeFiles/cmTC_e2e6c.dir/build
 make[1]: Entering directory '/home/vagrant/airliner/apps/ea/fsw/src/proto_defs/temp/CMakeFiles/CMakeTmp'
-Building C object CMakeFiles/cmTC_71aee.dir/feature_tests.c.o
-/usr/bin/cc    -std=c99 -o CMakeFiles/cmTC_71aee.dir/feature_tests.c.o   -c /home/vagrant/airliner/apps/ea/fsw/src/proto_defs/temp/CMakeFiles/feature_tests.c
-Linking C executable cmTC_71aee
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_71aee.dir/link.txt --verbose=1
-/usr/bin/cc       CMakeFiles/cmTC_71aee.dir/feature_tests.c.o  -o cmTC_71aee -rdynamic 
+Building C object CMakeFiles/cmTC_e2e6c.dir/feature_tests.c.o
+/usr/bin/cc    -std=c99 -o CMakeFiles/cmTC_e2e6c.dir/feature_tests.c.o   -c /home/vagrant/airliner/apps/ea/fsw/src/proto_defs/temp/CMakeFiles/feature_tests.c
+Linking C executable cmTC_e2e6c
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_e2e6c.dir/link.txt --verbose=1
+/usr/bin/cc       CMakeFiles/cmTC_e2e6c.dir/feature_tests.c.o  -o cmTC_e2e6c -rdynamic 
 make[1]: Leaving directory '/home/vagrant/airliner/apps/ea/fsw/src/proto_defs/temp/CMakeFiles/CMakeTmp'
 
 
@@ -182,14 +182,14 @@ make[1]: Leaving directory '/home/vagrant/airliner/apps/ea/fsw/src/proto_defs/te
 Detecting C [-std=c90] compiler features compiled with the following output:
 Change Dir: /home/vagrant/airliner/apps/ea/fsw/src/proto_defs/temp/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_fdaab/fast"
-/usr/bin/make -f CMakeFiles/cmTC_fdaab.dir/build.make CMakeFiles/cmTC_fdaab.dir/build
+Run Build Command:"/usr/bin/make" "cmTC_faf4a/fast"
+/usr/bin/make -f CMakeFiles/cmTC_faf4a.dir/build.make CMakeFiles/cmTC_faf4a.dir/build
 make[1]: Entering directory '/home/vagrant/airliner/apps/ea/fsw/src/proto_defs/temp/CMakeFiles/CMakeTmp'
-Building C object CMakeFiles/cmTC_fdaab.dir/feature_tests.c.o
-/usr/bin/cc    -std=c90 -o CMakeFiles/cmTC_fdaab.dir/feature_tests.c.o   -c /home/vagrant/airliner/apps/ea/fsw/src/proto_defs/temp/CMakeFiles/feature_tests.c
-Linking C executable cmTC_fdaab
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_fdaab.dir/link.txt --verbose=1
-/usr/bin/cc       CMakeFiles/cmTC_fdaab.dir/feature_tests.c.o  -o cmTC_fdaab -rdynamic 
+Building C object CMakeFiles/cmTC_faf4a.dir/feature_tests.c.o
+/usr/bin/cc    -std=c90 -o CMakeFiles/cmTC_faf4a.dir/feature_tests.c.o   -c /home/vagrant/airliner/apps/ea/fsw/src/proto_defs/temp/CMakeFiles/feature_tests.c
+Linking C executable cmTC_faf4a
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_faf4a.dir/link.txt --verbose=1
+/usr/bin/cc       CMakeFiles/cmTC_faf4a.dir/feature_tests.c.o  -o cmTC_faf4a -rdynamic 
 make[1]: Leaving directory '/home/vagrant/airliner/apps/ea/fsw/src/proto_defs/temp/CMakeFiles/CMakeTmp'
 
 

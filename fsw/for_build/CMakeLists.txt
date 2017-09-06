@@ -13,6 +13,8 @@ add_airliner_app_def(ea
         ${CMAKE_CURRENT_SOURCE_DIR}/../src/ea_private_ids.h
         ${CMAKE_CURRENT_SOURCE_DIR}/../src/ea_tbldefs.h
         ${CMAKE_CURRENT_SOURCE_DIR}/../src/ea_version.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/../src/ea_serialization.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/../src/ea_serialization.h
    
     INCLUDES
         ${CMAKE_CURRENT_SOURCE_DIR}/../src/
@@ -70,7 +72,7 @@ find_package(Nanopb REQUIRED)
 include_directories(${NANOPB_INCLUDE_DIRS})
 
 FILE(GLOB proto_files "${CMAKE_CURRENT_SOURCE_DIR}/../src/*.proto")
-nanopb_generate_cpp(PROTO_SRCS PROTO_HDRS ${CMAKE_CURRENT_SOURCE_DIR}/../src/*.proto)
+nanopb_generate_cpp(PROTO_SRCS PROTO_HDRS ${CMAKE_CURRENT_SOURCE_DIR}/../src/proto_defs/*.proto)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 set_source_files_properties(${PROTO_SRCS} ${PROTO_HDRS}
