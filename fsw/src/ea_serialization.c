@@ -7,8 +7,8 @@ uint32 EA_StartApp_Enc(const EA_StartCmd_t *inObject, char *inOutBuffer, uint32 
 	
 	//pbMsg.interpreter = inObject->interpreter;
 	//pbMsg.script = inObject->script;
-    //strcpy(pbMsg.interpreter, inObject->interpreter);
-    //strcpy(pbMsg.script, inObject->script);
+    strcpy(pbMsg.interpreter, inObject->interpreter);
+    strcpy(pbMsg.script, inObject->script);
 
 
 	/* Create a stream that will write to our buffer. */
@@ -44,7 +44,8 @@ uint32 EA_StartApp_Dec(const char *inBuffer, uint32 inSize, EA_StartCmd_t *inOut
 	
 	//inOutObject->interpreter = pbMsg.interpreter;
 	//inOutObject->script = pbMsg.script;
-
+    strcpy(inOutObject->interpreter, pbMsg.interpreter);
+    strcpy(inOutObject->script, pbMsg.script);
 
 	return sizeof(EA_StartCmd_t);
 }
