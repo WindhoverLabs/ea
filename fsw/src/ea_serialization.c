@@ -1,6 +1,6 @@
 #include "ea_serialization.h"
 
-uint32 EA_StartApp_Enc(const EA_StartCmd_t *inObject, char *inOutBuffer, uint32 inSize)
+uint32 EA_StartCmd_t_Enc(const EA_StartCmd_t *inObject, char *inOutBuffer, uint32 inSize)
 {
 	bool status = false;
 	ea_start_pb pbMsg;
@@ -25,7 +25,7 @@ uint32 EA_StartApp_Enc(const EA_StartCmd_t *inObject, char *inOutBuffer, uint32 
 	return stream.bytes_written;
 }
 
-uint32 EA_StartApp_Dec(const char *inBuffer, uint32 inSize, EA_StartCmd_t *inOutObject)
+uint32 EA_StartCmd_t_Dec(const char *inBuffer, uint32 inSize, EA_StartCmd_t *inOutObject)
 {
 	bool status = false;
 	ea_start_pb pbMsg;

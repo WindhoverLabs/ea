@@ -15,6 +15,8 @@ add_airliner_app_def(ea
         ${CMAKE_CURRENT_SOURCE_DIR}/../src/ea_version.h
         ${CMAKE_CURRENT_SOURCE_DIR}/../src/ea_serialization.c
         ${CMAKE_CURRENT_SOURCE_DIR}/../src/ea_serialization.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/../src/ea_start.pb.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/../src/ea_start.pb.h
    
     INCLUDES
         ${CMAKE_CURRENT_SOURCE_DIR}/../src/

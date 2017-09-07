@@ -22,6 +22,8 @@
 #include "ea_config_utils.h"
 #include "ea_cds_utils.h"
 #include "ea_custom.h"
+#include "ea_serialization.h"
+#include "ea_start.pb.h"
 
 #ifdef __cplusplus
 extern "C" {
