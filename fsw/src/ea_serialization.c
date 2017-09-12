@@ -10,8 +10,8 @@ uint32 EA_StartCmd_t_Enc(const EA_StartCmd_t *inObject, char *inOutBuffer, uint3
 	//pbMsg.script = inObject->script;
     strcpy(pbMsg.interpreter, inObject->interpreter);
     strcpy(pbMsg.script, inObject->script);
-    OS_printf("set vars\n");
-
+//    OS_printf("set vars\n");
+//
     OS_printf("inObject script %s\n", inObject->script);
     OS_printf("inObject interpreter %s\n", inObject->interpreter);
     OS_printf("pb script %s\n", pbMsg.script);
@@ -19,7 +19,7 @@ uint32 EA_StartCmd_t_Enc(const EA_StartCmd_t *inObject, char *inOutBuffer, uint3
 
 	/* Create a stream that will write to our buffer. */
 	pb_ostream_t stream = pb_ostream_from_buffer((pb_byte_t *)inOutBuffer, inSize);
-	OS_printf("made stream\n");
+	//OS_printf("made stream\n");
 	/* Now we are ready to encode the message. */
 	status = pb_encode(&stream, ea_start_pb_fields, &pbMsg);
 	OS_printf("encoded: %s\n", inOutBuffer);
