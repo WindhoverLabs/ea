@@ -1,3 +1,4 @@
+set(EA_PROTOBUF_MSGS_DIR ${CMAKE_CURRENT_BINARY_DIR}/msgs/protobuf)
 
 add_airliner_app_def(ea
     FILE EA
@@ -16,15 +17,18 @@ add_airliner_app_def(ea
         ${CMAKE_CURRENT_SOURCE_DIR}/../src/ea_version.h
         ${CMAKE_CURRENT_SOURCE_DIR}/../src/ea_serialization.c
         ${CMAKE_CURRENT_SOURCE_DIR}/../src/ea_serialization.h
-        ${CMAKE_CURRENT_BINARY_DIR}/msgs/protobuf/ea_start.pb.c
-        ${CMAKE_CURRENT_BINARY_DIR}/msgs/protobuf/ea_start.pb.h
+        ${EA_PROTOBUF_MSGS_DIR}/ea_start.pb.c
+        ${EA_PROTOBUF_MSGS_DIR}/ea_start.pb.h
    
     INCLUDES
-        ${CMAKE_CURRENT_BINARY_DIR}/msgs/protobuf/
+        ${EA_PROTOBUF_MSGS_DIR}
         ${CMAKE_CURRENT_SOURCE_DIR}/../src/
         
     PROTOBUF_DEFS
         ${CMAKE_CURRENT_SOURCE_DIR}/../src/proto_defs/ea_start.proto
+        
+    PROTOBUF_MSGS_DIR        
+        ${EA_PROTOBUF_MSGS_DIR}
 
     USER_DOCS   ${CMAKE_CURRENT_SOURCE_DIR}/user_doxy.in
     DESIGN_DOCS ${CMAKE_CURRENT_SOURCE_DIR}/detail_doxy.in
@@ -60,7 +64,7 @@ add_airliner_app_unit_test(ea-ut
         ${CMAKE_CURRENT_SOURCE_DIR}/../src/ea_version.h
         
     INCLUDES
-        ${CMAKE_CURRENT_BINARY_DIR}/msgs/protobuf/
+        ${EA_PROTOBUF_MSGS_DIR}
         ${CMAKE_CURRENT_SOURCE_DIR}/../src/
         ${CMAKE_CURRENT_SOURCE_DIR}/../unit_test/
 )
@@ -73,3 +77,4 @@ add_custom_target(
 )
 add_dependencies(ea-ut ea-ut-input-files)
 
+set(EA_PROTOBUF_MSGS_DIR ${EA_PROTOBUF_MSGS_DIR} PARENT_SCOPE)
