@@ -604,7 +604,7 @@ int32 EA_StartApp(CFE_SB_Msg_t* MsgPtr)
 					{
 						CFE_EVS_SendEvent (EA_CHILD_TASK_START_ERR_EID,
 										   CFE_EVS_ERROR,
-										   "Create child tasked failed. Unable to start external application",
+										   "Create child tasked failed (%lu). Unable to start external application",
 										   Status);
 
 						EA_AppData.HkTlm.usCmdErrCnt++;

@@ -272,7 +272,7 @@ typedef struct
 
     /** \eatlmmnemonic \EA_
 		\brief Last run application return code */
-    int16			   LastAppStatus;
+    int32			   LastAppStatus;
 
 } EA_HkTlm_t;
 
