@@ -25,7 +25,7 @@ add_airliner_app_def(ea
         ${CMAKE_CURRENT_SOURCE_DIR}/../src/
         
     PROTOBUF_DEFS
-        ${CMAKE_CURRENT_SOURCE_DIR}/../src/proto_defs/ea_start.proto
+        ${CMAKE_CURRENT_SOURCE_DIR}/../msgs/proto_defs/ea_start.proto
         
     PROTOBUF_MSGS_DIR        
         ${EA_PROTOBUF_MSGS_DIR}
