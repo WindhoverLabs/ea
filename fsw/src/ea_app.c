@@ -568,9 +568,6 @@ int32 EA_StartApp(CFE_SB_Msg_t* MsgPtr)
 			CmdPtr->interpreter[OS_MAX_PATH_LEN - 1] = '\0';
 			CmdPtr->script[OS_MAX_PATH_LEN - 1] = '\0';
 
-			OS_printf("App: %s\n", CmdPtr->interpreter);
-			OS_printf("script: %s\n", CmdPtr->script);
-
 			/*
 			** Check if specified interpreter exists
 			*/
