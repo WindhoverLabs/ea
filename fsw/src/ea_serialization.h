@@ -5,8 +5,8 @@
 #include "cfe.h"
 #include "ea_msg.h"
 
-#include "../tools/nanopb/pb_encode.h"
-#include "../tools/nanopb/pb_decode.h"
+#include "pb_encode.h"
+#include "pb_decode.h"
 #include "ea_start.pb.h"
 
 /* Serialization Functions */

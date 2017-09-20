@@ -2,6 +2,7 @@ set(EA_PROTOBUF_MSGS_DIR ${CMAKE_CURRENT_BINARY_DIR}/msgs/protobuf)
 
 add_airliner_app_def(ea
     FILE EA
+	NANOPB
     SOURCES
         ${CMAKE_CURRENT_SOURCE_DIR}/../src/ea_app.c
         ${CMAKE_CURRENT_SOURCE_DIR}/../src/ea_app.h
@@ -35,7 +36,8 @@ add_airliner_app_def(ea
 )
 
 add_airliner_app_unit_test(ea-ut
-    UTASSERT 
+    UTASSERT
+	NANOPB
     SOURCES
         ${CMAKE_CURRENT_SOURCE_DIR}/../unit_test/ea_app_test.c
         ${CMAKE_CURRENT_SOURCE_DIR}/../unit_test/ea_app_test.h
