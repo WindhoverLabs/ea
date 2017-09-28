@@ -1,4 +1,3 @@
-    
 #ifndef EA_CONFIG_UTILS_H
 #define EA_CONFIG_UTILS_H
 

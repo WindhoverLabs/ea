@@ -1,4 +1,3 @@
-    
 #ifndef EA_MSG_H
 #define EA_MSG_H
 

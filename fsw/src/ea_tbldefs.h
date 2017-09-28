@@ -1,4 +1,3 @@
-    
 #ifndef EA_TBLDEFS_H
 #define EA_TBLDEFS_H
 

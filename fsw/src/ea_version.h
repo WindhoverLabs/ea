@@ -1,4 +1,3 @@
-    
 #ifndef EA_VERSION_H
 #define EA_VERSION_H
 

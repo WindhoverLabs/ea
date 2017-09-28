@@ -1,4 +1,3 @@
-    
 #ifndef EA_APP_H
 #define EA_APP_H
 

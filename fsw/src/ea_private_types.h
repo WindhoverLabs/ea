@@ -1,4 +1,3 @@
-    
 #ifndef EA_PRIVATE_TYPES_H
 #define EA_PRIVATE_TYPES_H
 

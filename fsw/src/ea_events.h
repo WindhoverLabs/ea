@@ -1,4 +1,3 @@
-    
 #ifndef EA_EVENTS_H
 #define EA_EVENTS_H
 
