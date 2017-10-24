@@ -100,6 +100,9 @@ add_airliner_app_unit_test(ea-ut
         ${EA_PROTOBUF_MSGS_DIR}
         ${CMAKE_CURRENT_SOURCE_DIR}/../src/
         ${CMAKE_CURRENT_SOURCE_DIR}/../unit_test/
+        
+    VALGRIND_SUPPRESSION_FILE
+        ${CMAKE_CURRENT_SOURCE_DIR}/../unit_test/valgrind.supp
 )
 
 add_custom_target(
