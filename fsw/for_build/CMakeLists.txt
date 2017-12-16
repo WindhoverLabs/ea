@@ -105,6 +105,9 @@ add_airliner_app_unit_test(ea-ut
         ${CMAKE_CURRENT_SOURCE_DIR}/../unit_test/valgrind.supp
 )
 
+add_dependencies(ea-ut ea)
+add_dependencies(ea-ut-gcov ea)
+
 add_custom_target(
     ea-ut-input-files
     COMMAND cp ${CMAKE_CURRENT_SOURCE_DIR}/../unit_test/sleep.py ${CMAKE_CURRENT_BINARY_DIR}
