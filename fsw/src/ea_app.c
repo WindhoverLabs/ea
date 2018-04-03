@@ -625,7 +625,7 @@ int32 EA_StartApp(CFE_SB_Msg_t* MsgPtr)
 													NULL,
 													CFE_ES_DEFAULT_STACK_SIZE,
 													EA_CHILD_TASK_PRIORITY,
-													0);
+													EA_CHILD_TASK_FLAGS);
 					if (Status == CFE_SUCCESS)
 					{
 						CFE_EVS_SendEvent (EA_CHILD_TASK_START_EID, CFE_EVS_DEBUG, "Created child task for app start");
