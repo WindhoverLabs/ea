@@ -519,6 +519,8 @@ void EA_ProcessNewAppCmds(CFE_SB_Msg_t* MsgPtr)
         switch (uiCmdCode)
         {
             case EA_NOOP_CC:
+                OS_printf("cmd sec: %i\n", sizeof(CCSDS_CmdSecHdr_t));
+                OS_printf("tlm sec: %i\n", sizeof(CCSDS_TlmSecHdr_t));
                 EA_AppData.HkTlm.usCmdCnt++;
                 (void) CFE_EVS_SendEvent(EA_CMD_NOOP_EID, CFE_EVS_INFORMATION,
                                   "Recvd NOOP cmd (%u), Version %d.%d.%d.%d",
@@ -532,10 +534,10 @@ void EA_ProcessNewAppCmds(CFE_SB_Msg_t* MsgPtr)
             case EA_RESET_CC:
                 EA_AppData.HkTlm.usCmdCnt = 0;
                 EA_AppData.HkTlm.usCmdErrCnt = 0;
-                memset(EA_AppData.HkTlm.ActiveApp, '\0', OS_MAX_PATH_LEN);
+                memset(EA_AppData.HkTlm.ActiveApp, '\0', EA_MAX_PATH_LEN);
 				EA_AppData.HkTlm.ActiveAppUtil = 0;
 				EA_AppData.HkTlm.ActiveAppPID = 0;
-				memset(EA_AppData.HkTlm.LastAppRun, '\0', OS_MAX_PATH_LEN);
+				memset(EA_AppData.HkTlm.LastAppRun, '\0', EA_MAX_PATH_LEN);
 				EA_AppData.HkTlm.LastAppStatus = 0;
 				EA_AppData.ProcData.p_time = 0;
 				EA_AppData.ProcData.total_time = 0;
@@ -587,8 +589,8 @@ int32 EA_StartApp(CFE_SB_Msg_t* MsgPtr)
 	EA_StartCmd_t       *CmdPtr = 0;
 
 	/* Verify command packet length... */
-	if (EA_VerifyCmdLength (MsgPtr,ExpectedLength))
-	{
+	//if (EA_VerifyCmdLength (MsgPtr,ExpectedLength))
+	//{
 		if (EA_AppData.ChildAppTaskInUse == FALSE)
 		{
 			CmdPtr = ((EA_StartCmd_t *) MsgPtr);
@@ -597,60 +599,48 @@ int32 EA_StartApp(CFE_SB_Msg_t* MsgPtr)
 			** NUL terminate the very end of the filename string as a
 			** safety measure
 			*/
-			CmdPtr->interpreter[OS_MAX_PATH_LEN - 1] = '\0';
-			CmdPtr->script[OS_MAX_PATH_LEN - 1] = '\0';
-
+			CmdPtr->interpreter[EA_MAX_PATH_LEN - 1] = '\0';
+			CmdPtr->script[EA_MAX_PATH_LEN - 1] = '\0';
+            OS_printf("app: %s\n", CmdPtr->interpreter);
+            OS_printf("script: %s\n", CmdPtr->script);
 			/*
 			** Check if specified interpreter exists
 			*/
 			if(access(CmdPtr->interpreter, F_OK ) != -1)
 			{
 				/*
-				** Check if specified script exists - TODO This may be obsolete in the future
+				** Update ChildData with validated data
 				*/
-				if(access(CmdPtr->script, F_OK ) != -1)
+				strcpy(EA_AppData.ChildData.AppInterpreter, CmdPtr->interpreter);
+				strcpy(EA_AppData.ChildData.AppScript, CmdPtr->script);
+
+				/* There is no child task running right now, we can use it*/
+				EA_AppData.ChildAppTaskInUse = TRUE;
+
+				Status = CFE_ES_CreateChildTask(&ChildAppTaskID,
+												EA_START_APP_TASK_NAME,
+												EA_StartAppCustom,
+												NULL,
+												CFE_ES_DEFAULT_STACK_SIZE,
+												EA_CHILD_TASK_PRIORITY,
+												EA_CHILD_TASK_FLAGS);
+				if (Status == CFE_SUCCESS)
 				{
-					/*
-					** Update ChildData with validated data
-					*/
-					strcpy(EA_AppData.ChildData.AppInterpreter, CmdPtr->interpreter);
-					strcpy(EA_AppData.ChildData.AppScript, CmdPtr->script);
+					CFE_EVS_SendEvent (EA_CHILD_TASK_START_EID, CFE_EVS_DEBUG, "Created child task for app start");
 
-					/* There is no child task running right now, we can use it*/
-					EA_AppData.ChildAppTaskInUse = TRUE;
-
-					Status = CFE_ES_CreateChildTask(&ChildAppTaskID,
-													EA_START_APP_TASK_NAME,
-													EA_StartAppCustom,
-													NULL,
-													CFE_ES_DEFAULT_STACK_SIZE,
-													EA_CHILD_TASK_PRIORITY,
-													EA_CHILD_TASK_FLAGS);
-					if (Status == CFE_SUCCESS)
-					{
-						CFE_EVS_SendEvent (EA_CHILD_TASK_START_EID, CFE_EVS_DEBUG, "Created child task for app start");
-
-						EA_AppData.ChildAppTaskID = ChildAppTaskID;
-					}
-					else/* child task creation failed */
-					{
-						CFE_EVS_SendEvent (EA_CHILD_TASK_START_ERR_EID,
-										   CFE_EVS_ERROR,
-										   "Create child tasked failed (%lu). Unable to start external application",
-										   Status);
-
-						EA_AppData.HkTlm.usCmdErrCnt++;
-						EA_AppData.ChildAppTaskInUse   = FALSE;
-						memset(EA_AppData.ChildData.AppInterpreter, '\0', OS_MAX_PATH_LEN);
-						memset(EA_AppData.ChildData.AppScript, '\0', OS_MAX_PATH_LEN);
-					}
-
+					EA_AppData.ChildAppTaskID = ChildAppTaskID;
 				}
-				else
+				else/* child task creation failed */
 				{
+					CFE_EVS_SendEvent (EA_CHILD_TASK_START_ERR_EID,
+									   CFE_EVS_ERROR,
+									   "Create child tasked failed (%lu). Unable to start external application",
+									   Status);
+
 					EA_AppData.HkTlm.usCmdErrCnt++;
-					CFE_EVS_SendEvent(EA_APP_ARG_ERR_EID, CFE_EVS_ERROR,
-						"Specified arg does not exist");
+					EA_AppData.ChildAppTaskInUse   = FALSE;
+					memset(EA_AppData.ChildData.AppInterpreter, '\0', EA_MAX_PATH_LEN);
+					memset(EA_AppData.ChildData.AppScript, '\0', EA_MAX_PATH_LEN);
 				}
 			}
 			else
@@ -669,7 +659,7 @@ int32 EA_StartApp(CFE_SB_Msg_t* MsgPtr)
 
 			EA_AppData.HkTlm.usCmdErrCnt++;
 		}
-	}
+	//}
 	return Status;
 }
 
