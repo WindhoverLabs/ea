@@ -519,8 +519,6 @@ void EA_ProcessNewAppCmds(CFE_SB_Msg_t* MsgPtr)
         switch (uiCmdCode)
         {
             case EA_NOOP_CC:
-                OS_printf("cmd sec: %i\n", sizeof(CCSDS_CmdSecHdr_t));
-                OS_printf("tlm sec: %i\n", sizeof(CCSDS_TlmSecHdr_t));
                 EA_AppData.HkTlm.usCmdCnt++;
                 (void) CFE_EVS_SendEvent(EA_CMD_NOOP_EID, CFE_EVS_INFORMATION,
                                   "Recvd NOOP cmd (%u), Version %d.%d.%d.%d",
