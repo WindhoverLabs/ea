@@ -587,8 +587,8 @@ int32 EA_StartApp(CFE_SB_Msg_t* MsgPtr)
 	EA_StartCmd_t       *CmdPtr = 0;
 
 	/* Verify command packet length... */
-	//if (EA_VerifyCmdLength (MsgPtr,ExpectedLength))
-	//{
+	if (EA_VerifyCmdLength (MsgPtr,ExpectedLength))
+	{
 		if (EA_AppData.ChildAppTaskInUse == FALSE)
 		{
 			CmdPtr = ((EA_StartCmd_t *) MsgPtr);
@@ -599,8 +599,7 @@ int32 EA_StartApp(CFE_SB_Msg_t* MsgPtr)
 			*/
 			CmdPtr->interpreter[EA_MAX_PATH_LEN - 1] = '\0';
 			CmdPtr->script[EA_MAX_PATH_LEN - 1] = '\0';
-            OS_printf("app: %s\n", CmdPtr->interpreter);
-            OS_printf("script: %s\n", CmdPtr->script);
+
 			/*
 			** Check if specified interpreter exists
 			*/
@@ -657,7 +656,7 @@ int32 EA_StartApp(CFE_SB_Msg_t* MsgPtr)
 
 			EA_AppData.HkTlm.usCmdErrCnt++;
 		}
-	//}
+	}
 	return Status;
 }
 
