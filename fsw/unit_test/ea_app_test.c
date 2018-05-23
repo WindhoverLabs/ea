@@ -696,7 +696,7 @@ void Test_EA_ProcessNewAppCmds_StartApp_InvalidArgArg(void)
 	EA_StartCmd_t InStartCmd;
 
 	CFE_SB_InitMsg (&InStartCmd, EA_CMD_MID, sizeof(InStartCmd), TRUE);
-	strcpy(InStartCmd.interpreter, APP_PATH);
+	strcpy(InStartCmd.interpreter, "InvalidDirectory");
 	strcpy(InStartCmd.script, "InvalidDirectory");
 
 	/* Execute the function being tested */
@@ -705,7 +705,7 @@ void Test_EA_ProcessNewAppCmds_StartApp_InvalidArgArg(void)
 	/* Verify results */
 	UtAssert_True(Ut_CFE_EVS_GetEventQueueDepth()==1,"Event Count = 1");
 	UtAssert_EventSent(EA_APP_ARG_ERR_EID, CFE_EVS_ERROR,
-						"Specified arg does not exist", "Invalid argument event sent");
+						"Specified app does not exist", "Invalid argument event sent");
 	UtAssert_True(EA_AppData.HkTlm.usCmdErrCnt==1,"Command Error Count = 1");
 }
 
