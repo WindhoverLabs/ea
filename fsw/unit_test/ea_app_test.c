@@ -50,8 +50,8 @@
 #include "ut_cfe_fs_stubs.h"
 #include "ut_cfe_time_stubs.h"
 
-char APP_PATH[OS_MAX_PATH_LEN] = "/usr/bin/python";
-char TEST_ARG[OS_MAX_PATH_LEN] = "noop.py";
+char APP_PATH[EA_MAX_PATH_LEN] = "/usr/bin/python";
+char TEST_ARG[EA_MAX_PATH_LEN] = "noop.py";
 
 int32 hookCalledCount = 0;
 
@@ -557,7 +557,7 @@ void Test_EA_ProcessNewAppCmds_Reset_Nominal(void)
     int32         DataPipe;
     int32         CmdPipe;
 	uint32        i = 0;
-	char		  emptyString[OS_MAX_PATH_LEN];
+	char		  emptyString[EA_MAX_PATH_LEN];
 
     /* The following will emulate behavior of receiving a SCH message to WAKEUP,
        and gives it a command to process. */
@@ -579,11 +579,11 @@ void Test_EA_ProcessNewAppCmds_Reset_Nominal(void)
 	EA_AppData.HkTlm.ActiveAppUtil = 3;
 	EA_AppData.HkTlm.ActiveAppPID = 4;
 	EA_AppData.HkTlm.LastAppStatus = 5;
-	memset(EA_AppData.HkTlm.ActiveApp, 'a', OS_MAX_PATH_LEN);
-	memset(EA_AppData.HkTlm.LastAppRun, 'b', OS_MAX_PATH_LEN);
+	memset(EA_AppData.HkTlm.ActiveApp, 'a', EA_MAX_PATH_LEN);
+	memset(EA_AppData.HkTlm.LastAppRun, 'b', EA_MAX_PATH_LEN);
 
     /* Set test variable to correct value */
-    memset(emptyString, '\0', OS_MAX_PATH_LEN);
+    memset(emptyString, '\0', EA_MAX_PATH_LEN);
 
     /* Execute the function being tested */
     EA_AppMain();
