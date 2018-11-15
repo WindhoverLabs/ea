@@ -40,76 +40,21 @@
    "title": "",
    "content": [
     {
-     "type": "column",
-     "isClosable": true,
-     "reorderEnabled": true,
-     "title": "",
-     "width": 25.080971659919026,
-     "content": [
-      {
-       "type": "stack",
-       "header": {},
-       "isClosable": true,
-       "reorderEnabled": true,
-       "title": "",
-       "activeItemIndex": 0,
-       "width": 50,
-       "height": 50,
-       "content": [
-        {
-         "title": "Command and Data Handling",
-         "type": "component",
-         "componentName": "Blank",
-         "componentState": {
-          "text": "text",
-          "link": "/amc/cdh"
-         },
-         "isClosable": true,
-         "reorderEnabled": true
-        }
-       ]
-      },
-      {
-       "type": "stack",
-       "header": {},
-       "isClosable": true,
-       "reorderEnabled": true,
-       "title": "",
-       "activeItemIndex": 0,
-       "height": 50,
-       "content": [
-        {
-         "title": "Application Scheduling",
-         "type": "component",
-         "componentName": "Blank",
-         "componentState": {
-          "text": "text",
-          "link": "/sch/app_sch?appName=AMC"
-         },
-         "isClosable": true,
-         "reorderEnabled": true
-        }
-       ]
-      }
-     ]
-    },
-    {
      "type": "stack",
      "header": {},
      "isClosable": true,
      "reorderEnabled": true,
      "title": "",
      "activeItemIndex": 0,
-     "height": 100,
-     "width": 40.58873554839747,
+     "width": 56.75348273773471,
      "content": [
       {
-       "title": "Actuator Outputs",
+       "title": "EA HK",
        "type": "component",
        "componentName": "Blank",
        "componentState": {
         "text": "text",
-        "link": "/amc/ao"
+        "link": "/ea/hk"
        },
        "isClosable": true,
        "reorderEnabled": true
@@ -122,8 +67,8 @@
      "isClosable": true,
      "reorderEnabled": true,
      "title": "",
-     "activeItemIndex": 0,
-     "width": 34.3302927916835,
+     "activeItemIndex": 2,
+     "width": 43.24651726226529,
      "content": [
       {
        "title": "Event Filter",
@@ -131,7 +76,29 @@
        "componentName": "Blank",
        "componentState": {
         "text": "text",
-        "link": "/cfe/evs/efltr?appName=AMC"
+        "link": "/cfe/evs/efltr?appName=EA"
+       },
+       "isClosable": true,
+       "reorderEnabled": true
+      },
+      {
+       "title": "Schedule Control",
+       "type": "component",
+       "componentName": "Blank",
+       "componentState": {
+        "text": "text",
+        "link": "/sch/app_sch?appName=EA"
+       },
+       "isClosable": true,
+       "reorderEnabled": true
+      },
+      {
+       "title": "Telemetry Control",
+       "type": "component",
+       "componentName": "Blank",
+       "componentState": {
+        "text": "text",
+        "link": "/to/tlm_app?appName=EA"
        },
        "isClosable": true,
        "reorderEnabled": true

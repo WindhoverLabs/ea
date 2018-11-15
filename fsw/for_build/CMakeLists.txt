@@ -46,6 +46,7 @@ add_airliner_app_def(ea
         ${CMAKE_CURRENT_SOURCE_DIR}/../src/ea_events.h
         ${CMAKE_CURRENT_SOURCE_DIR}/../src/ea_msg.h
         ${CMAKE_CURRENT_SOURCE_DIR}/../src/ea_private_ids.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/../src/ea_symbols.c
         ${CMAKE_CURRENT_SOURCE_DIR}/../src/ea_tbldefs.h
         ${CMAKE_CURRENT_SOURCE_DIR}/../src/ea_version.h
         ${CMAKE_CURRENT_SOURCE_DIR}/../src/ea_serialization.c
@@ -65,6 +66,11 @@ add_airliner_app_def(ea
 
     USER_DOCS   ${CMAKE_CURRENT_SOURCE_DIR}/user_doxy.in
     DESIGN_DOCS ${CMAKE_CURRENT_SOURCE_DIR}/detail_doxy.in
+    
+    MSG_OVERRIDES   ${CMAKE_CURRENT_SOURCE_DIR}/ea_msg_overrides.json 
+
+    COMMANDER_PLUGIN
+        ${CMAKE_CURRENT_SOURCE_DIR}/../../cdr
 )
 
 add_airliner_app_unit_test(ea-ut
