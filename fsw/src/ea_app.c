@@ -39,12 +39,10 @@
 ** Includes
 *************************************************************************/
 #include <string.h>
-
 #include "cfe.h"
 #include "ea_app.h"
 #include "ea_msg.h"
 #include "ea_version.h"
-
 #include <unistd.h>
 
 /************************************************************************
@@ -77,29 +75,22 @@ EA_AppData_t  EA_AppData;
 /* Initialize event tables                                         */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
 int32 EA_InitEvent()
 {
-    int32  iStatus=CFE_SUCCESS;
+    int32  iStatus = CFE_SUCCESS;
     int32  ind = 0;
 
     /* Initialize the event filter table.
      * Note: 0 is the CFE_EVS_NO_FILTER mask and event 0 is reserved (not used) */
-    memset((void*)EA_AppData.EventTbl, 0x00, sizeof(EA_AppData.EventTbl));
+    CFE_PSP_MemSet((void*)EA_AppData.EventTbl, 0x00, sizeof(EA_AppData.EventTbl));
 
-    /* TODO: Choose the events you want to filter.  CFE_EVS_MAX_EVENT_FILTERS
-     * limits the number of filters per app.  An explicit CFE_EVS_NO_FILTER 
-     * (the default) has been provided as an example. */
     EA_AppData.EventTbl[  ind].EventID = EA_RESERVED_EID;
     EA_AppData.EventTbl[ind++].Mask    = CFE_EVS_NO_FILTER;
 
     EA_AppData.EventTbl[  ind].EventID = EA_INF_EID;
     EA_AppData.EventTbl[ind++].Mask    = CFE_EVS_NO_FILTER;
 
-    EA_AppData.EventTbl[  ind].EventID = EA_CONFIG_TABLE_ERR_EID;
-    EA_AppData.EventTbl[ind++].Mask    = CFE_EVS_NO_FILTER;
-
-    EA_AppData.EventTbl[  ind].EventID = EA_CDS_ERR_EID;
+    EA_AppData.EventTbl[  ind].EventID = EA_INIT_INF_EID;
     EA_AppData.EventTbl[ind++].Mask    = CFE_EVS_NO_FILTER;
 
     EA_AppData.EventTbl[  ind].EventID = EA_PIPE_ERR_EID;
@@ -109,6 +100,42 @@ int32 EA_InitEvent()
     EA_AppData.EventTbl[ind++].Mask    = CFE_EVS_NO_FILTER;
 
     EA_AppData.EventTbl[  ind].EventID = EA_MSGLEN_ERR_EID;
+    EA_AppData.EventTbl[ind++].Mask    = CFE_EVS_NO_FILTER;
+
+    EA_AppData.EventTbl[  ind].EventID = EA_CMD_INF_EID;
+    EA_AppData.EventTbl[ind++].Mask    = CFE_EVS_NO_FILTER;
+    
+    EA_AppData.EventTbl[  ind].EventID = EA_INF_APP_START_EID;
+    EA_AppData.EventTbl[ind++].Mask    = CFE_EVS_NO_FILTER;
+    
+    EA_AppData.EventTbl[  ind].EventID = EA_INF_APP_TERM_EID;
+    EA_AppData.EventTbl[ind++].Mask    = CFE_EVS_NO_FILTER;
+    
+    EA_AppData.EventTbl[  ind].EventID = EA_APP_ERR_EID;
+    EA_AppData.EventTbl[ind++].Mask    = CFE_EVS_NO_FILTER;
+    
+    EA_AppData.EventTbl[  ind].EventID = EA_WARN_APP_UTIL_EID;
+    EA_AppData.EventTbl[ind++].Mask    = CFE_EVS_NO_FILTER;
+    
+    EA_AppData.EventTbl[  ind].EventID = EA_ERR_EID;
+    EA_AppData.EventTbl[ind++].Mask    = CFE_EVS_NO_FILTER;
+    
+    EA_AppData.EventTbl[  ind].EventID = EA_INIT_ERR_EID;
+    EA_AppData.EventTbl[ind++].Mask    = CFE_EVS_NO_FILTER;
+    
+    EA_AppData.EventTbl[  ind].EventID = EA_CMD_ERR_EID;
+    EA_AppData.EventTbl[ind++].Mask    = CFE_EVS_NO_FILTER;
+    
+    EA_AppData.EventTbl[  ind].EventID = EA_CHILD_TASK_START_EID;
+    EA_AppData.EventTbl[ind++].Mask    = CFE_EVS_NO_FILTER;
+    
+    EA_AppData.EventTbl[  ind].EventID = EA_CHILD_TASK_START_ERR_EID;
+    EA_AppData.EventTbl[ind++].Mask    = CFE_EVS_NO_FILTER;
+
+    EA_AppData.EventTbl[  ind].EventID = EA_CMD_NOOP_EID;
+    EA_AppData.EventTbl[ind++].Mask    = CFE_EVS_NO_FILTER;
+    
+    EA_AppData.EventTbl[  ind].EventID = EA_CMD_RESET_EID;
     EA_AppData.EventTbl[ind++].Mask    = CFE_EVS_NO_FILTER;
 
     /* Register the table with CFE */
@@ -128,10 +155,9 @@ int32 EA_InitEvent()
 /* Initialize Message Pipes                                        */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
 int32 EA_InitPipe()
 {
-    int32  iStatus=CFE_SUCCESS;
+    int32  iStatus = CFE_SUCCESS;
 
     /* Init schedule pipe and subscribe to wakeup messages */
     iStatus = CFE_SB_CreatePipe(&EA_AppData.SchPipeId,
@@ -193,26 +219,6 @@ int32 EA_InitPipe()
         goto EA_InitPipe_Exit_Tag;
     }
 
-    /* Init data pipe and subscribe to messages on the data pipe */
-    iStatus = CFE_SB_CreatePipe(&EA_AppData.DataPipeId,
-                                 EA_DATA_PIPE_DEPTH,
-                                 EA_DATA_PIPE_NAME);
-    if (iStatus == CFE_SUCCESS)
-    {
-        /* Add CFE_SB_Subscribe() calls for other apps' output data here.
-        **
-        ** Examples:
-        **     CFE_SB_Subscribe(GNCEXEC_OUT_DATA_MID, EA_AppData.DataPipeId);
-        */
-    }
-    else
-    {
-        (void) CFE_EVS_SendEvent(EA_INIT_ERR_EID, CFE_EVS_ERROR,
-                                 "Failed to create Data pipe (0x%08X)",
-                                 (unsigned int)iStatus);
-        goto EA_InitPipe_Exit_Tag;
-    }
-
 EA_InitPipe_Exit_Tag:
     return (iStatus);
 }
@@ -223,21 +229,12 @@ EA_InitPipe_Exit_Tag:
 /* Initialize Global Variables                                     */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
 int32 EA_InitData()
 {
-    int32  iStatus=CFE_SUCCESS;
-
-    /* Init input data */
-    memset((void*)&EA_AppData.InData, 0x00, sizeof(EA_AppData.InData));
-
-    /* Init output data */
-    memset((void*)&EA_AppData.OutData, 0x00, sizeof(EA_AppData.OutData));
-    CFE_SB_InitMsg(&EA_AppData.OutData,
-                   EA_OUT_DATA_MID, sizeof(EA_AppData.OutData), TRUE);
+    int32  iStatus = CFE_SUCCESS;
 
     /* Init housekeeping packet */
-    memset((void*)&EA_AppData.HkTlm, 0x00, sizeof(EA_AppData.HkTlm));
+    CFE_PSP_MemSet((void*)&EA_AppData.HkTlm, 0x00, sizeof(EA_AppData.HkTlm));
     CFE_SB_InitMsg(&EA_AppData.HkTlm,
                    EA_HK_TLM_MID, sizeof(EA_AppData.HkTlm), TRUE);
 
@@ -250,7 +247,6 @@ int32 EA_InitData()
 /* EA initialization                                              */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
 int32 EA_InitApp()
 {
     int32  iStatus   = CFE_SUCCESS;
@@ -281,24 +277,6 @@ int32 EA_InitApp()
     {
         (void) CFE_EVS_SendEvent(EA_INIT_ERR_EID, CFE_EVS_ERROR,
                                  "Failed to init data (0x%08X)",
-                                 (unsigned int)iStatus);
-        goto EA_InitApp_Exit_Tag;
-    }
-
-    iStatus = EA_InitConfigTbl();
-    if (iStatus != CFE_SUCCESS)
-    {
-        (void) CFE_EVS_SendEvent(EA_INIT_ERR_EID, CFE_EVS_ERROR,
-                                 "Failed to init config tables (0x%08X)",
-                                 (unsigned int)iStatus);
-        goto EA_InitApp_Exit_Tag;
-    }
-
-    iStatus = EA_InitCdsTbl();
-    if (iStatus != CFE_SUCCESS)
-    {
-        (void) CFE_EVS_SendEvent(EA_INIT_ERR_EID, CFE_EVS_ERROR,
-                                 "Failed to init CDS table (0x%08X)",
                                  (unsigned int)iStatus);
         goto EA_InitApp_Exit_Tag;
     }
@@ -334,12 +312,12 @@ EA_InitApp_Exit_Tag:
 /* Receive and Process Messages                                    */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
 int32 EA_RcvMsg(int32 iBlocking)
 {
     int32           iStatus=CFE_SUCCESS;
     CFE_SB_Msg_t*   MsgPtr=NULL;
     CFE_SB_MsgId_t  MsgId;
+    
     /* Stop Performance Log entry */
     CFE_ES_PerfLogExit(EA_MAIN_TASK_PERF_ID);
 
@@ -355,9 +333,7 @@ int32 EA_RcvMsg(int32 iBlocking)
         switch (MsgId)
         {
             case EA_WAKEUP_MID:
-                EA_ProcessNewData();
                 EA_ProcessNewCmds();
-                EA_SendOutData();
                 break;
 
             case EA_SEND_HK_MID:
@@ -390,74 +366,24 @@ int32 EA_RcvMsg(int32 iBlocking)
          * CFE_SB_PIPE_RD_ERROR).
          */
         (void) CFE_EVS_SendEvent(EA_PIPE_ERR_EID, CFE_EVS_ERROR,
-			  "SB pipe read error (0x%08X), app will exit", (unsigned int)iStatus);
+              "SB pipe read error (0x%08X), app will exit", (unsigned int)iStatus);
         EA_AppData.uiRunStatus= CFE_ES_APP_ERROR;
     }
+    
     return (iStatus);
 }
-
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Process Incoming Data                                           */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void EA_ProcessNewData()
-{
-    int iStatus = CFE_SUCCESS;
-    CFE_SB_Msg_t*   DataMsgPtr=NULL;
-    CFE_SB_MsgId_t  DataMsgId;
-
-    /* Process telemetry messages till the pipe is empty */
-    while (1)
-    {
-        iStatus = CFE_SB_RcvMsg(&DataMsgPtr, EA_AppData.DataPipeId, CFE_SB_POLL);
-        if (iStatus == CFE_SUCCESS)
-        {
-            DataMsgId = CFE_SB_GetMsgId(DataMsgPtr);
-            switch (DataMsgId)
-            {
-                /* Add code to process all subscribed data here
-                **
-                ** Example:
-                **     case NAV_OUT_DATA_MID:
-                **         EA_ProcessNavData(DataMsgPtr);
-                **         break;
-                */
-
-                default:
-                    //(void) CFE_EVS_SendEvent(EA_MSGID_ERR_EID, CFE_EVS_ERROR,
-                                      //"Recvd invalid data msgId (0x%04X)", (unsigned short)DataMsgId);
-                    break;
-            }
-        }
-        else if (iStatus == CFE_SB_NO_MESSAGE)
-        {
-            break;
-        }
-        else
-        {
-            (void) CFE_EVS_SendEvent(EA_PIPE_ERR_EID, CFE_EVS_ERROR,
-                  "Data pipe read error (0x%08X)", (unsigned int)iStatus);
-            EA_AppData.uiRunStatus = CFE_ES_APP_ERROR;
-            break;
-        }
-    }
-}
-
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
 /* Process Incoming Commands                                       */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
 void EA_ProcessNewCmds()
 {
     int iStatus = CFE_SUCCESS;
-    CFE_SB_Msg_t*   CmdMsgPtr=NULL;
+    CFE_SB_Msg_t*   CmdMsgPtr = NULL;
     CFE_SB_MsgId_t  CmdMsgId;
+    
     /* Process command messages till the pipe is empty */
     while (1)
     {
@@ -470,14 +396,6 @@ void EA_ProcessNewCmds()
                 case EA_CMD_MID:
                     EA_ProcessNewAppCmds(CmdMsgPtr);
                     break;
-
-                /* Add code to process other subscribed commands here
-                **
-                ** Example:
-                **     case CFE_TIME_DATA_CMD_MID:
-                **         EA_ProcessTimeDataCmd(CmdMsgPtr);
-                **         break;
-                */
 
                 default:
                     /* Bump the command error counter for an unknown command.
@@ -509,7 +427,6 @@ void EA_ProcessNewCmds()
 /* Process EA Commands                                            */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
 void EA_ProcessNewAppCmds(CFE_SB_Msg_t* MsgPtr)
 {
     uint32  uiCmdCode=0;
@@ -532,41 +449,41 @@ void EA_ProcessNewAppCmds(CFE_SB_Msg_t* MsgPtr)
             case EA_RESET_CC:
                 EA_AppData.HkTlm.usCmdCnt = 0;
                 EA_AppData.HkTlm.usCmdErrCnt = 0;
-                memset(EA_AppData.HkTlm.ActiveApp, '\0', EA_MAX_PATH_LEN);
-				EA_AppData.HkTlm.ActiveAppUtil = 0;
-				EA_AppData.HkTlm.ActiveAppPID = 0;
-				memset(EA_AppData.HkTlm.LastAppRun, '\0', EA_MAX_PATH_LEN);
-				EA_AppData.HkTlm.LastAppStatus = 0;
-				EA_AppData.ProcData.p_time = 0;
-				EA_AppData.ProcData.total_time = 0;
-				EA_AppData.ChildAppTaskInUse = FALSE;
+                CFE_PSP_MemSet(EA_AppData.HkTlm.ActiveApp, '\0', EA_MAX_PATH_LEN);
+                EA_AppData.HkTlm.ActiveAppUtil = 0;
+                EA_AppData.HkTlm.ActiveAppPID = 0;
+                CFE_PSP_MemSet(EA_AppData.HkTlm.LastAppRun, '\0', EA_MAX_PATH_LEN);
+                EA_AppData.HkTlm.LastAppStatus = 0;
+                EA_AppData.ProcData.p_time = 0;
+                EA_AppData.ProcData.total_time = 0;
+                EA_AppData.ChildAppTaskInUse = FALSE;
 
                 (void) CFE_EVS_SendEvent(EA_CMD_RESET_EID, CFE_EVS_INFORMATION,
                                   "Recvd RESET cmd (%u)", (unsigned int)uiCmdCode);
                 break;
 
             case EA_START_APP_CC:
-				(void) CFE_EVS_SendEvent(EA_CMD_INF_EID, CFE_EVS_INFORMATION,
-								  "Recvd Start App cmd (%u)", (unsigned int)uiCmdCode);
-				EA_StartApp(MsgPtr);
-				break;
+                (void) CFE_EVS_SendEvent(EA_CMD_INF_EID, CFE_EVS_INFORMATION,
+                                  "Recvd Start App cmd (%u)", (unsigned int)uiCmdCode);
+                EA_StartApp(MsgPtr);
+                break;
 
             case EA_TERM_APP_CC:
-				(void) CFE_EVS_SendEvent(EA_CMD_INF_EID, CFE_EVS_INFORMATION,
-								  "Recvd Terminate App cmd (%u)", (unsigned int)uiCmdCode);
-            	EA_TermApp(MsgPtr);
-				break;
+                (void) CFE_EVS_SendEvent(EA_CMD_INF_EID, CFE_EVS_INFORMATION,
+                                  "Recvd Terminate App cmd (%u)", (unsigned int)uiCmdCode);
+                EA_TermApp(MsgPtr);
+                break;
 
             case EA_PERFMON_CC:
-				(void) CFE_EVS_SendEvent(EA_CMD_INF_EID, CFE_EVS_INFORMATION,
-								  "Recvd Perfmon cmd (%u)", (unsigned int)uiCmdCode);
-				EA_Perfmon();
-				break;
+                (void) CFE_EVS_SendEvent(EA_CMD_INF_EID, CFE_EVS_INFORMATION,
+                                  "Recvd Perfmon cmd (%u)", (unsigned int)uiCmdCode);
+                EA_Perfmon();
+                break;
 
             default:
                 EA_AppData.HkTlm.usCmdErrCnt++;
-                (void) CFE_EVS_SendEvent(EA_MSGID_ERR_EID, CFE_EVS_ERROR,
-                                  "Recvd invalid cmdId (%u)", (unsigned int)uiCmdCode);
+                (void) CFE_EVS_SendEvent(EA_CC_ERR_EID, CFE_EVS_ERROR,
+                                  "Recvd invalid cmd code (%u)", (unsigned int)uiCmdCode);
                 break;
         }
     }
@@ -577,87 +494,83 @@ void EA_ProcessNewAppCmds(CFE_SB_Msg_t* MsgPtr)
 /* EA Start App                                                    */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
 int32 EA_StartApp(CFE_SB_Msg_t* MsgPtr)
 {
-	/* command verification variables */
-	uint16              ExpectedLength = sizeof(EA_StartCmd_t);
-	uint32              ChildAppTaskID;
-	int32               Status = CFE_ES_APP_ERROR;
-	EA_StartCmd_t       *CmdPtr = 0;
+    uint16              ExpectedLength = sizeof(EA_StartCmd_t);
+    uint32              ChildAppTaskID = 0;
+    int32               Status = CFE_ES_APP_ERROR;
+    EA_StartCmd_t       *CmdPtr = 0;
+    os_fstat_t          FileStats;
 
-	/* Verify command packet length... */
-	if (EA_VerifyCmdLength (MsgPtr,ExpectedLength))
-	{
-		if (EA_AppData.ChildAppTaskInUse == FALSE)
-		{
-			CmdPtr = ((EA_StartCmd_t *) MsgPtr);
+    /* Verify command packet length... */
+    if (EA_VerifyCmdLength(MsgPtr, ExpectedLength))
+    {
+        if (EA_AppData.ChildAppTaskInUse == FALSE)
+        {
+            CmdPtr = ((EA_StartCmd_t *) MsgPtr);
 
-			/*
-			** NUL terminate the very end of the filename string as a
-			** safety measure
-			*/
-			CmdPtr->interpreter[EA_MAX_PATH_LEN - 1] = '\0';
-			CmdPtr->script[EA_MAX_PATH_LEN - 1] = '\0';
+            /*
+            ** NUL terminate the very end of the filename string as a
+            ** safety measure
+            */
+            CmdPtr->Cmd[EA_MAX_PATH_LEN - 1] = '\0';
+            CmdPtr->Args[EA_MAX_PATH_LEN - 1] = '\0';
 
-			/*
-			** Check if specified interpreter exists
-			*/
-			if(access(CmdPtr->interpreter, F_OK ) != -1)
-			{
-				/*
-				** Update ChildData with validated data
-				*/
-				strcpy(EA_AppData.ChildData.AppInterpreter, CmdPtr->interpreter);
-				strcpy(EA_AppData.ChildData.AppScript, CmdPtr->script);
+            /*
+            ** Check if specified interpreter exists
+            */
+            if(access(CmdPtr->Cmd, F_OK) != -1)
+            {
+                /*
+                ** Update ChildData with validated data
+                */
+                (void) strncpy(EA_AppData.ChildData.Cmd, CmdPtr->Cmd, EA_MAX_PATH_LEN);
+                (void) strncpy(EA_AppData.ChildData.Args, CmdPtr->Args, EA_MAX_PATH_LEN);
 
-				/* There is no child task running right now, we can use it*/
-				EA_AppData.ChildAppTaskInUse = TRUE;
+                Status = CFE_ES_CreateChildTask(&ChildAppTaskID,
+                                                EA_START_APP_TASK_NAME,
+                                                EA_StartAppCustom,
+                                                NULL,
+                                                CFE_ES_DEFAULT_STACK_SIZE,
+                                                EA_CHILD_TASK_PRIORITY,
+                                                EA_CHILD_TASK_FLAGS);
+                if (Status == CFE_SUCCESS)
+                {
+                    (void) CFE_EVS_SendEvent (EA_CHILD_TASK_START_EID, CFE_EVS_DEBUG, "Created child task for app start");
+                    EA_AppData.ChildAppTaskInUse = TRUE;
+                    EA_AppData.ChildAppTaskID = ChildAppTaskID;
+                }
+                else /* Child task creation failed */
+                {
+                    (void) CFE_EVS_SendEvent (EA_CHILD_TASK_START_ERR_EID,
+                                              CFE_EVS_ERROR,
+                                              "Create child tasked failed (%lu). Unable to start external application",
+                                              Status);
 
-				Status = CFE_ES_CreateChildTask(&ChildAppTaskID,
-												EA_START_APP_TASK_NAME,
-												EA_StartAppCustom,
-												NULL,
-												CFE_ES_DEFAULT_STACK_SIZE,
-												EA_CHILD_TASK_PRIORITY,
-												EA_CHILD_TASK_FLAGS);
-				if (Status == CFE_SUCCESS)
-				{
-					CFE_EVS_SendEvent (EA_CHILD_TASK_START_EID, CFE_EVS_DEBUG, "Created child task for app start");
+                    EA_AppData.HkTlm.usCmdErrCnt++;
+                    EA_AppData.ChildAppTaskInUse   = FALSE;
+                    CFE_PSP_MemSet(EA_AppData.ChildData.Cmd, '\0', EA_MAX_PATH_LEN);
+                    CFE_PSP_MemSet(EA_AppData.ChildData.Args, '\0', EA_MAX_PATH_LEN);
+                }
+            }
+            else
+            {
+                EA_AppData.HkTlm.usCmdErrCnt++;
+                (void) CFE_EVS_SendEvent(EA_APP_ERR_EID, CFE_EVS_ERROR,
+                                         "Specified app does not exist");
+            }
+        }
+        else
+        {
+            /* Send event that we can't start another task right now */
+            (void) CFE_EVS_SendEvent (EA_CHILD_TASK_START_ERR_EID,
+                                      CFE_EVS_ERROR,
+                                      "Create child tasked failed. A child task is in use");
 
-					EA_AppData.ChildAppTaskID = ChildAppTaskID;
-				}
-				else/* child task creation failed */
-				{
-					CFE_EVS_SendEvent (EA_CHILD_TASK_START_ERR_EID,
-									   CFE_EVS_ERROR,
-									   "Create child tasked failed (%lu). Unable to start external application",
-									   Status);
-
-					EA_AppData.HkTlm.usCmdErrCnt++;
-					EA_AppData.ChildAppTaskInUse   = FALSE;
-					memset(EA_AppData.ChildData.AppInterpreter, '\0', EA_MAX_PATH_LEN);
-					memset(EA_AppData.ChildData.AppScript, '\0', EA_MAX_PATH_LEN);
-				}
-			}
-			else
-			{
-				EA_AppData.HkTlm.usCmdErrCnt++;
-				CFE_EVS_SendEvent(EA_APP_ARG_ERR_EID, CFE_EVS_ERROR,
-					"Specified app does not exist");
-			}
-		}
-		else
-		{
-			/*send event that we can't start another task right now */
-			CFE_EVS_SendEvent (EA_CHILD_TASK_START_ERR_EID,
-							   CFE_EVS_ERROR,
-							   "Create child tasked failed. A child task is in use");
-
-			EA_AppData.HkTlm.usCmdErrCnt++;
-		}
-	}
-	return Status;
+            EA_AppData.HkTlm.usCmdErrCnt++;
+        }
+    }
+    return (Status);
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -665,20 +578,19 @@ int32 EA_StartApp(CFE_SB_Msg_t* MsgPtr)
 /* EA Terminate App                                                */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
 void EA_TermApp(CFE_SB_Msg_t* MsgPtr)
 {
-	uint16 ExpectedLength = sizeof(EA_NoArgCmd_t);
+    uint16 ExpectedLength = sizeof(EA_NoArgCmd_t);
 
-	/*
-	** Verify command packet length
-	*/
-	if(EA_VerifyCmdLength(MsgPtr, ExpectedLength))
-	{
-		EA_TermAppCustom(MsgPtr);
-	}
+    /*
+    ** Verify command packet length
+    */
+    if(EA_VerifyCmdLength(MsgPtr, ExpectedLength))
+    {
+        EA_TermAppCustom();
+    }
 
-	return;
+    return;
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -686,23 +598,22 @@ void EA_TermApp(CFE_SB_Msg_t* MsgPtr)
 /* EA Performance Monitor                                          */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
 void EA_Perfmon()
 {
     /*
-	** Only run when ActiveAppPID is set to nonzero value.
-	*/
-	if(EA_AppData.HkTlm.ActiveAppPID != 0)
-	{
-		EA_PerfmonCustom(EA_AppData.HkTlm.ActiveAppPID);
-		if(EA_AppData.HkTlm.ActiveAppUtil > EA_APP_UTIL_THRESHOLD)
-		{
-			CFE_EVS_SendEvent(EA_WARN_APP_UTIL_EID, CFE_EVS_INFORMATION,
-								"External application exceeded utilization threshold");
-		}
-	}
+    ** Only run when ActiveAppPID is set to nonzero value.
+    */
+    if(EA_AppData.HkTlm.ActiveAppPID != 0)
+    {
+        EA_PerfmonCustom(EA_AppData.HkTlm.ActiveAppPID);
+        if(EA_AppData.HkTlm.ActiveAppUtil > EA_APP_UTIL_THRESHOLD)
+        {
+            (void) CFE_EVS_SendEvent(EA_WARN_APP_UTIL_EID, CFE_EVS_INFORMATION,
+                                    "External application exceeded utilization threshold");
+        }
+    }
 
-	return;
+    return;
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -710,32 +621,10 @@ void EA_Perfmon()
 /* Send EA Housekeeping                                           */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
 void EA_ReportHousekeeping()
 {
     CFE_SB_TimeStampMsg((CFE_SB_Msg_t*)&EA_AppData.HkTlm);
-    int32 iStatus = CFE_SB_SendMsg((CFE_SB_Msg_t*)&EA_AppData.HkTlm);
-    if (iStatus != CFE_SUCCESS)
-    {
-        /* Decide what to do if the send message fails. */
-    }
-}
-
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Publish Output Data                                             */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void EA_SendOutData()
-{
-    CFE_SB_TimeStampMsg((CFE_SB_Msg_t*)&EA_AppData.OutData);
-    int32 iStatus = CFE_SB_SendMsg((CFE_SB_Msg_t*)&EA_AppData.OutData);
-    if (iStatus != CFE_SUCCESS)
-    {
-        /* Decide what to do if the send message fails. */
-    }
+    CFE_SB_SendMsg((CFE_SB_Msg_t*)&EA_AppData.HkTlm);
 }
 
 
@@ -744,7 +633,6 @@ void EA_SendOutData()
 /* Verify Command Length                                           */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
 boolean EA_VerifyCmdLength(CFE_SB_Msg_t* MsgPtr,
                            uint16 usExpectedLen)
 {
@@ -777,7 +665,6 @@ boolean EA_VerifyCmdLength(CFE_SB_Msg_t* MsgPtr,
 /* EA application entry point and main process loop               */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
 void EA_AppMain()
 {
     /* Register the application with Executive Services */
@@ -813,19 +700,11 @@ void EA_AppMain()
     /* Application main loop */
     while (CFE_ES_RunLoop(&EA_AppData.uiRunStatus) == TRUE)
     {
-        int32 iStatus = EA_RcvMsg(EA_SCH_PIPE_PEND_TIME);
-        if (iStatus != CFE_SUCCESS)
-        {
-        	/* Decide what to do for other return values in EA_RcvMsg(). */
-        }
-        EA_Perfmon(); //TODO
+        EA_RcvMsg(EA_SCH_PIPE_PEND_TIME);
         
-        iStatus = EA_AcquireConfigPointers();
-        if(iStatus != CFE_SUCCESS)
-        {
-            /* We apparently tried to load a new table but failed.  Terminate the application. */
-            EA_AppData.uiRunStatus = CFE_ES_APP_ERROR;
-        }
+        /* This could be scheduled in the future. It won't actually do perf
+         * monitoring unless the child task is currently executing */
+        EA_Perfmon();
     }
 
     /* Stop Performance Log entry */

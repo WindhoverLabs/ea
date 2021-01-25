@@ -63,7 +63,7 @@ typedef enum {
 **  This event message is a generic information event
 **
 */
-    EA_INF_EID,
+    EA_INF_EID = 1,
 
 /** \brief <tt> 'EA Initialized. Version \%d.\%d.\%d' </tt>
 **  \event <tt> 'EA Initialized. Version \%d.\%d.\%d' </tt>
@@ -79,31 +79,7 @@ typedef enum {
 **  The second \c %d field contains the Application's Minor Version Number
 **  The third \c %d field contains the Application's Revision Number
 */
-    EA_INIT_INF_EID,
-
-/** \brief <tt> 'EA - ' </tt>
-**  \event <tt> 'EA - ' </tt>
-**  
-**  \par Type: INFORMATION
-**
-**  \par Cause:
-**
-**  This message is generated when a table is initialized.
-**
-*/
-    EA_CONFIG_TABLE_INF_EID,
-
-/** \brief <tt> 'EA - ' </tt>
-**  \event <tt> 'EA - ' </tt>
-**  
-**  \par Type: INFORMATION
-**
-**  \par Cause:
-**
-**  This event message is issued when TBD
-**
-*/
-    EA_CDS_INF_EID,
+    EA_INIT_INF_EID = 2,
 
 /** \brief <tt> 'EA - Recvd $x cmd (%us)' </tt>
 **  \event <tt> 'EA - Recvd $x cmd (%us)' </tt>
@@ -116,7 +92,7 @@ typedef enum {
 **  received and processed a command.
 **
 */
-    EA_CMD_INF_EID,
+    EA_CMD_INF_EID = 3,
 
 /** \brief <tt> 'External application started' </tt>
 **  \event <tt> 'External application started' </tt>
@@ -129,7 +105,7 @@ typedef enum {
 **  has been started.
 **
 */
-	EA_INF_APP_START_EID,
+    EA_INF_APP_START_EID = 4,
 
 /** \brief <tt> 'External application terminated' </tt>
 **  \event <tt> 'External application terminated' </tt>
@@ -142,7 +118,7 @@ typedef enum {
 **  has been manually stopped.
 **
 */
-	EA_INF_APP_TERM_EID,
+    EA_INF_APP_TERM_EID = 5,
 
 /** \brief <tt> 'Specified app does not exist' </tt> 
 **  \event <tt> 'Specified app does not exist' </tt>
@@ -155,7 +131,7 @@ typedef enum {
 **  external app is unaccessible or does not exist
 **
 */
-	EA_APP_ARG_ERR_EID,
+    EA_APP_ERR_EID = 6,
 
 /** \brief <tt> 'External application exceeded utilization threshold' </tt>
 **  \event <tt> 'External application exceeded utilization threshold' </tt>
@@ -169,7 +145,7 @@ typedef enum {
 **  platform config
 **
 */
-	EA_WARN_APP_UTIL_EID,
+    EA_WARN_APP_UTIL_EID = 7,
 
 /** \brief <tt> 'EA - ' </tt>
 **  \event <tt> 'EA - ' </tt>
@@ -181,7 +157,7 @@ typedef enum {
 **  This event message is issued when TBD
 **
 */
-    EA_ERR_EID,
+    EA_ERR_EID = 8,
 
 /** \brief <tt> 'EA - ' </tt>
 **  \event <tt> 'EA - ' </tt>
@@ -194,33 +170,7 @@ typedef enum {
 **  had an error in initialization.
 **
 */
-    EA_INIT_ERR_EID,
-
-/** \brief <tt> 'EA - ' </tt>
-**  \event <tt> 'EA - ' </tt>
-**  
-**  \par Type: ERROR
-**
-**  \par Cause:
-**
-**  This event message is issued when the CFS EA Task has
-**  had an error with the configuration table.
-**
-*/
-    EA_CONFIG_TABLE_ERR_EID,
-
-/** \brief <tt> 'EA - ' </tt>
-**  \event <tt> 'EA - ' </tt>
-**  
-**  \par Type: ERROR
-**
-**  \par Cause:
-**
-**  This event message is issued when the CFS EA Task has
-**  had an error in CDS.
-**
-*/
-    EA_CDS_ERR_EID,
+    EA_INIT_ERR_EID = 9,
 
 /** \brief <tt> 'EA - $commandError' </tt>
 **  \event <tt> 'EA - $commandError' </tt>
@@ -233,7 +183,7 @@ typedef enum {
 **  had an error processing a command.
 **
 */
-    EA_CMD_ERR_EID,
+    EA_CMD_ERR_EID = 10,
 
 /** \brief <tt> 'EA: SB pipe read error (0x%08X), app will exit' </tt>
 **  \event <tt> 'EA: SB pipe read error (0x%08X), app will exit' </tt>
@@ -246,7 +196,7 @@ typedef enum {
 **  had an error reading from a pipe.
 **
 */
-    EA_PIPE_ERR_EID,
+    EA_PIPE_ERR_EID = 11,
 
 /** \brief <tt> 'EA - Recvd invalid $type msgId (0x%04x)' </tt>
 **  \event <tt> 'EA - Recvd invalid $type msgId (0x%04x)' </tt>
@@ -259,7 +209,7 @@ typedef enum {
 **  received an invalid message ID.
 **
 */
-    EA_MSGID_ERR_EID,
+    EA_MSGID_ERR_EID = 12,
 
 /** \brief <tt> 'EA - Rcvd invalid msgLen: msgId=0x%08X, cmdCode=%d, msgLen=%d, expectedLen=%d" </tt>
 **  \event <tt> 'EA - Rcvd invalid msgLen: msgId=0x%08X, cmdCode=%d, msgLen=%d, expectedLen=%d" </tt>
@@ -272,7 +222,7 @@ typedef enum {
 **  received a message with a bad length.
 **
 */
-    EA_MSGLEN_ERR_EID,
+    EA_MSGLEN_ERR_EID = 13,
 
 /** \brief <tt> 'Created child task for app start' </tt>
 **  \event <tt> 'Created child task for app start' </tt>
@@ -285,7 +235,7 @@ typedef enum {
 **  successfully created a child task to execute the external app.
 **
 */
-	EA_CHILD_TASK_START_EID,
+    EA_CHILD_TASK_START_EID = 14,
 
 /** \brief <tt> 'Create child tasked failed. Unable to start external application' </tt>
 **  \event <tt> 'Create child tasked failed. Unable to start external application' </tt>
@@ -298,7 +248,7 @@ typedef enum {
 **  failed to create a child task to execute the external app.
 **
 */
-	EA_CHILD_TASK_START_ERR_EID,
+    EA_CHILD_TASK_START_ERR_EID = 15,
 
 /** \brief <tt> 'Recvd NOOP cmd (%u), Version %d.%d.%d.%d' </tt>
 **  \event <tt> 'Recvd NOOP cmd (%u), Version %d.%d.%d.%d' </tt>
@@ -310,7 +260,7 @@ typedef enum {
 **  This event message is issued when EA has performed a noop command.
 **
 */
-	EA_CMD_NOOP_EID,
+    EA_CMD_NOOP_EID = 16,
 
 /** \brief <tt> 'External application exceeded utilization threshold' </tt>
 **  \event <tt> 'External application exceeded utilization threshold' </tt>
@@ -322,7 +272,19 @@ typedef enum {
 **  This event message is issued when EA has performed a reset command.
 **
 */
-	EA_CMD_RESET_EID,
+    EA_CMD_RESET_EID = 17,
+
+	/** \brief <tt> 'Recvd invalid cmd code (%u)' </tt>
+	**  \event <tt> 'Recvd invalid cmd code (%u)' </tt>
+	**
+	**  \par Type: ERROR
+	**
+	**  \par Cause:
+	**
+	**  A command with an invalid command code was received.
+	**
+	*/
+	EA_CC_ERR_EID = 18,
 
 /** \brief <tt> This is a count of all the app events and should not be used. </tt> */
     EA_EVT_CNT

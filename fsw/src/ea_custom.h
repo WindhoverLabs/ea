@@ -52,11 +52,11 @@
 */
 typedef struct
 {
-	/** \brief Total system cpu time (in jiffies) */
-    unsigned long long int			total_time;
+    /** \brief Total system cpu time (in jiffies) */
+    uint64 total_time;
 
     /** \brief Total  cpu time (in jiffies) */
-    unsigned long long int			p_time;
+    uint64 p_time;
 
 } EA_ProcData_t;
 
@@ -75,7 +75,7 @@ typedef struct
 **       None
 **
 *************************************************************************/
-void EA_StartAppCustom();
+void EA_StartAppCustom(void);
 
 /************************************************************************/
 /** \brief Terminate Child task and Stop External Application
@@ -90,7 +90,7 @@ void EA_StartAppCustom();
 **       None
 **
 *************************************************************************/
-void EA_TermAppCustom();
+void EA_TermAppCustom(void);
 
 /************************************************************************/
 /** \brief Performance Monitoring

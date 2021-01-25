@@ -50,13 +50,6 @@
 #include <time.h>
 
 /*
- * Config table for testing
- */
-EA_ConfigTblEntry_t EA_configtable = {
-        1 /* iParam*/
-};
-
-/*
  * Function Definitions
  */
 
@@ -74,8 +67,6 @@ void EA_Test_Setup(void)
     Ut_CFE_ES_Reset();
     Ut_OSAPI_Reset();
     Ut_OSFILEAPI_Reset();
-
-    Ut_CFE_TBL_AddTable(EA_CONFIG_TABLE_FILENAME, (void *) &EA_configtable);
 }
 
 void EA_Test_TearDown(void) {

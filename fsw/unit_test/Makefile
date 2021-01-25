@@ -33,7 +33,6 @@ APPTARGET=ut_ea
 #
 FLIGHT_OBJS := ea_app.o
 FLIGHT_OBJS += ea_config_utils.o
-FLIGHT_OBJS += ea_cds_utils.o
 
 #
 # FLIGHT_INC specifies the directories of the flight software under test
@@ -49,7 +48,6 @@ UT_OBJS := ea_testrunner.o
 UT_OBJS += ea_app_test.o
 UT_OBJS += ea_cmds_test.o
 UT_OBJS += ea_config_tbl_test.o
-UT_OBJS += ea_cds_tbl_test.o
 UT_OBJS += ea_test_utils.o
 
 #

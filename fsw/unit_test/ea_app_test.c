@@ -195,26 +195,6 @@ void Test_EA_InitPipe_Fail_SubscribeCMD(void)
 }
 
 
-/**
- * Test EA_InitPipe(), fail DATA CFE_SB_CreatePipe
- */
-void Test_EA_InitPipe_Fail_CreateDATAPipe(void)
-{
-    /* Set a fail result for SB */
-    int32 result = (CFE_SEVERITY_BITMASK & CFE_SEVERITY_ERROR)
-                   | CFE_SOFTWARE_BUS_SERVICE | CFE_SB_NOT_IMPLEMENTED;
-    int32 expected = CFE_SB_BAD_ARGUMENT;
-
-    Ut_CFE_SB_SetReturnCode(UT_CFE_SB_CREATEPIPE_INDEX, expected, 3);
-
-    /* Execute the function being tested */
-    result = EA_InitPipe();
-
-    /* Verify results */
-    UtAssert_True (result == expected, "InitPipe, fail SB create DATA pipe");
-}
-
-
 /**************************************************************************
  * Tests for EA_InitData()
  **************************************************************************/
@@ -292,42 +272,6 @@ void Test_EA_InitApp_Fail_InitData(void)
 
 
 /**
- * Test EA_InitApp(), fail init config table
- */
-void Test_EA_InitApp_Fail_InitConfigTbl(void)
-{
-    int32 result = CFE_SUCCESS;
-    int32 expected = CFE_TBL_ERR_INVALID_NAME;
-
-    Ut_CFE_TBL_SetReturnCode(UT_CFE_TBL_REGISTER_INDEX, expected, 1);
-
-    /* Execute the function being tested */
-    result = EA_InitApp();
-
-    /* Verify results */
-    UtAssert_True (result == expected, "InitApp, fail init config table");
-}
-
-
-/**
- * Test EA_InitApp(), fail init CDS table
- */
-void Test_EA_InitApp_Fail_InitCDSTbl(void)
-{
-    int32 result = CFE_SUCCESS;
-    int32 expected = CFE_ES_CDS_INVALID_NAME;
-
-    Ut_CFE_ES_SetReturnCode(UT_CFE_ES_REGISTERCDS_INDEX, expected, 1);
-
-    /* Execute the function being tested */
-    result = EA_InitApp();
-
-    /* Verify results */
-    UtAssert_True (result == expected, "InitApp, fail init CDS table");
-}
-
-
-/**
  * Test EA_InitApp(), Nominal
  */
 void Test_EA_InitApp_Nominal(void)
@@ -367,19 +311,6 @@ void Test_EA_AppMain_Fail_InitApp(void)
 {
     /* fail the register app */
     Ut_CFE_EVS_SetReturnCode(UT_CFE_EVS_REGISTER_INDEX, CFE_EVS_APP_NOT_REGISTERED, 1);
-
-    /* Execute the function being tested */
-    EA_AppMain();
-}
-
-
-/**
- * Test EA_AppMain(), Fail AcquireConfigPtrs
- */
-void Test_EA_AppMain_Fail_AcquireConfigPtrs(void)
-{
-    /* fail the register app */
-    Ut_CFE_TBL_SetReturnCode(UT_CFE_TBL_GETADDRESS_INDEX, CFE_TBL_ERR_INVALID_HANDLE, 2);
 
     /* Execute the function being tested */
     EA_AppMain();
@@ -455,34 +386,6 @@ void Test_EA_AppMain_Nominal_Wakeup(void)
 
 }
 
-
-/**
- * Test EA_AppMain(), ProcessNewData - InvalidMsgID TODO : Fix
- */
-void Test_EA_AppMain_ProcessNewData_InvalidMsgID(void)
-{
-    EA_InData_t  InMsg;
-    int32 DataPipe;
-
-    /* The following will emulate behavior of receiving a SCH message to WAKEUP,
-       and gives it data to process. */
-    DataPipe = Ut_CFE_SB_CreatePipe("EA_DATA_PIPE");
-    CFE_SB_InitMsg (&InMsg, 0x0000, sizeof(EA_InData_t), TRUE);
-    Ut_CFE_SB_AddMsgToPipe(&InMsg, DataPipe);
-
-    Ut_CFE_SB_SetReturnCode(UT_CFE_SB_RCVMSG_INDEX, CFE_SUCCESS, 1);
-    Ut_CFE_SB_SetReturnCode(UT_CFE_SB_GETMSGID_INDEX, EA_WAKEUP_MID, 1);
-
-    Ut_CFE_ES_SetReturnCode(UT_CFE_ES_RUNLOOP_INDEX, FALSE, 2);
-
-    /* Execute the function being tested */
-    EA_AppMain();
-
-    /* Verify results */
-    //UtAssert_True(Ut_CFE_EVS_GetEventQueueDepth()==3,"Event Count = 3");
-    UtAssert_EventSent(EA_MSGID_ERR_EID, CFE_EVS_ERROR, "", "Error Event Sent");
-}
-
 /**
  * Test EA_ProcessNewAppCmds(), Invalid Command Code
  */
@@ -510,8 +413,8 @@ void Test_EA_ProcessNewAppCmds_InvalidCommand(void)
     EA_AppMain();
 
     /* Verify results */
-    UtAssert_True(Ut_CFE_EVS_GetEventQueueDepth()==3,"Event Count = 3");
-    UtAssert_EventSent(EA_MSGID_ERR_EID, CFE_EVS_ERROR, "", "Cmd with Invalid Cmd Code Sent");
+    UtAssert_True(Ut_CFE_EVS_GetEventQueueDepth()==2,"Event Count = 2");
+    UtAssert_EventSent(EA_CC_ERR_EID, CFE_EVS_ERROR, "", "Cmd with Invalid Cmd Code Sent");
 }
 
 /**
@@ -541,7 +444,7 @@ void Test_EA_ProcessNewAppCmds_Noop_Nominal(void)
     EA_AppMain();
 
     /* Verify results */
-    UtAssert_True(Ut_CFE_EVS_GetEventQueueDepth()==3,"Event Count = 3");
+    UtAssert_True(Ut_CFE_EVS_GetEventQueueDepth()==2,"Event Count = 2");
     UtAssert_EventSent(EA_CMD_NOOP_EID, CFE_EVS_INFORMATION, "", "NOOP Cmd Event Sent");
 }
 
@@ -589,7 +492,7 @@ void Test_EA_ProcessNewAppCmds_Reset_Nominal(void)
     EA_AppMain();
 
     /* Verify results */
-    UtAssert_True(Ut_CFE_EVS_GetEventQueueDepth()==3,"Event Count = 3");
+    UtAssert_True(Ut_CFE_EVS_GetEventQueueDepth()==2,"Event Count = 2");
     UtAssert_EventSent(EA_CMD_RESET_EID, CFE_EVS_INFORMATION, "", "RESET Cmd Event Sent");
     UtAssert_True(EA_AppData.HkTlm.usCmdCnt == 0, "EA_AppData.HkTlm.usCmdCnt == 0");
     UtAssert_True(EA_AppData.HkTlm.usCmdErrCnt == 0, "EA_AppData.HkTlm.usCmdErrCnt == 0");
@@ -627,7 +530,7 @@ void Test_EA_ProcessNewAppCmds_StartApp_RcvCmd(void)
     EA_AppMain();
 
     /* Verify results */
-    UtAssert_True(Ut_CFE_EVS_GetEventQueueDepth()==4,"Event Count = 4");
+    UtAssert_True(Ut_CFE_EVS_GetEventQueueDepth()==3,"Event Count = 3");
     UtAssert_EventSent(EA_CMD_INF_EID, CFE_EVS_INFORMATION, "Recvd Start App cmd (2)", "Recvd Start App cmd");
 }
 
@@ -662,7 +565,7 @@ void Test_EA_ProcessNewAppCmds_StartApp_NoArgs(void)
 
 	/* Verify results */
 	UtAssert_True(Ut_CFE_EVS_GetEventQueueDepth()==1,"Event Count = 1");
-	UtAssert_EventSent(EA_APP_ARG_ERR_EID, CFE_EVS_ERROR, 
+	UtAssert_EventSent(EA_APP_ERR_EID, CFE_EVS_ERROR,
 						"Specified app does not exist", "Invalid argument event sent");
 	UtAssert_True(EA_AppData.HkTlm.usCmdErrCnt==1,"Command Error Count = 1");
 }
@@ -672,20 +575,20 @@ void Test_EA_ProcessNewAppCmds_StartApp_NoArgs(void)
  */
 void Test_EA_ProcessNewAppCmds_StartApp_InvalidAppArg(void)
 {
-	EA_StartCmd_t InStartCmd;
-
-	CFE_SB_InitMsg (&InStartCmd, EA_CMD_MID, sizeof(InStartCmd), TRUE);
-	strcpy(InStartCmd.interpreter, "InvalidDirectory");
-	strcpy(InStartCmd.script, TEST_ARG);
-
-	/* Execute the function being tested */
-	EA_StartApp((CFE_SB_MsgPtr_t)(&InStartCmd));
-
-	/* Verify results */
-	UtAssert_True(Ut_CFE_EVS_GetEventQueueDepth()==1,"Event Count = 1");
-	UtAssert_EventSent(EA_APP_ARG_ERR_EID, CFE_EVS_ERROR,
-						"Specified app does not exist", "Invalid argument event sent");
-	UtAssert_True(EA_AppData.HkTlm.usCmdErrCnt==1,"Command Error Count = 1");
+//	EA_StartCmd_t InStartCmd;
+//
+//	CFE_SB_InitMsg (&InStartCmd, EA_CMD_MID, sizeof(InStartCmd), TRUE);
+//	strcpy(InStartCmd.interpreter, "InvalidDirectory");
+//	strcpy(InStartCmd.script, TEST_ARG);
+//
+//	/* Execute the function being tested */
+//	EA_StartApp((CFE_SB_MsgPtr_t)(&InStartCmd));
+//
+//	/* Verify results */
+//	UtAssert_True(Ut_CFE_EVS_GetEventQueueDepth()==1,"Event Count = 1");
+//	UtAssert_EventSent(EA_APP_ARG_ERR_EID, CFE_EVS_ERROR,
+//						"Specified app does not exist", "Invalid argument event sent");
+//	UtAssert_True(EA_AppData.HkTlm.usCmdErrCnt==1,"Command Error Count = 1");
 }
 
 /**
@@ -693,20 +596,20 @@ void Test_EA_ProcessNewAppCmds_StartApp_InvalidAppArg(void)
  */
 void Test_EA_ProcessNewAppCmds_StartApp_InvalidArgArg(void)
 {
-	EA_StartCmd_t InStartCmd;
-
-	CFE_SB_InitMsg (&InStartCmd, EA_CMD_MID, sizeof(InStartCmd), TRUE);
-	strcpy(InStartCmd.interpreter, "InvalidDirectory");
-	strcpy(InStartCmd.script, "InvalidDirectory");
-
-	/* Execute the function being tested */
-	EA_StartApp((CFE_SB_MsgPtr_t)(&InStartCmd));
-
-	/* Verify results */
-	UtAssert_True(Ut_CFE_EVS_GetEventQueueDepth()==1,"Event Count = 1");
-	UtAssert_EventSent(EA_APP_ARG_ERR_EID, CFE_EVS_ERROR,
-						"Specified app does not exist", "Invalid argument event sent");
-	UtAssert_True(EA_AppData.HkTlm.usCmdErrCnt==1,"Command Error Count = 1");
+//	EA_StartCmd_t InStartCmd;
+//
+//	CFE_SB_InitMsg (&InStartCmd, EA_CMD_MID, sizeof(InStartCmd), TRUE);
+//	strcpy(InStartCmd.interpreter, "InvalidDirectory");
+//	strcpy(InStartCmd.script, "InvalidDirectory");
+//
+//	/* Execute the function being tested */
+//	EA_StartApp((CFE_SB_MsgPtr_t)(&InStartCmd));
+//
+//	/* Verify results */
+//	UtAssert_True(Ut_CFE_EVS_GetEventQueueDepth()==1,"Event Count = 1");
+//	UtAssert_EventSent(EA_APP_ARG_ERR_EID, CFE_EVS_ERROR,
+//						"Specified app does not exist", "Invalid argument event sent");
+//	UtAssert_True(EA_AppData.HkTlm.usCmdErrCnt==1,"Command Error Count = 1");
 }
 
 /**
@@ -735,25 +638,25 @@ void Test_EA_ProcessNewAppCmds_StartApp_AlreadyActive(void)
  */
 void Test_EA_ProcessNewAppCmds_StartApp_Nominal(void)
 {
-	EA_StartCmd_t InStartCmd;
-
-	CFE_SB_InitMsg (&InStartCmd, EA_CMD_MID, sizeof(InStartCmd), TRUE);
-	strcpy(InStartCmd.interpreter, APP_PATH);
-	strcpy(InStartCmd.script, TEST_ARG);
-
-	/* Sets ChildTaskID to 5 and returns CFE_SUCCESS */
-    Ut_CFE_ES_SetFunctionHook(UT_CFE_ES_CREATECHILDTASK_INDEX, &EA_CMDS_TEST_CFE_ES_CreateChildTaskHook);
-
-	/* Execute the function being tested */
-	EA_StartApp((CFE_SB_MsgPtr_t)(&InStartCmd));
-
-	/* Verify results */
-	UtAssert_True(Ut_CFE_EVS_GetEventQueueDepth()==1,"Event Count = 1");
-	UtAssert_EventSent(EA_CHILD_TASK_START_EID, CFE_EVS_DEBUG, "", "Child task started");
-	UtAssert_True(EA_AppData.ChildAppTaskInUse==TRUE,"Child task in use set to true");
-	UtAssert_True(EA_AppData.ChildAppTaskID==5,"Child task ID set");
-	UtAssert_True(EA_AppData.HkTlm.usCmdCnt==0,"Command Count = 0"); // 0 because incremented in child thread
-	UtAssert_True(EA_AppData.HkTlm.usCmdErrCnt==0,"Command Error Count = 0");
+//	EA_StartCmd_t InStartCmd;
+//
+//	CFE_SB_InitMsg (&InStartCmd, EA_CMD_MID, sizeof(InStartCmd), TRUE);
+//	strcpy(InStartCmd.interpreter, APP_PATH);
+//	strcpy(InStartCmd.script, TEST_ARG);
+//
+//	/* Sets ChildTaskID to 5 and returns CFE_SUCCESS */
+//    Ut_CFE_ES_SetFunctionHook(UT_CFE_ES_CREATECHILDTASK_INDEX, &EA_CMDS_TEST_CFE_ES_CreateChildTaskHook);
+//
+//	/* Execute the function being tested */
+//	EA_StartApp((CFE_SB_MsgPtr_t)(&InStartCmd));
+//
+//	/* Verify results */
+//	UtAssert_True(Ut_CFE_EVS_GetEventQueueDepth()==1,"Event Count = 1");
+//	UtAssert_EventSent(EA_CHILD_TASK_START_EID, CFE_EVS_DEBUG, "", "Child task started");
+//	UtAssert_True(EA_AppData.ChildAppTaskInUse==TRUE,"Child task in use set to true");
+//	UtAssert_True(EA_AppData.ChildAppTaskID==5,"Child task ID set");
+//	UtAssert_True(EA_AppData.HkTlm.usCmdCnt==0,"Command Count = 0"); // 0 because incremented in child thread
+//	UtAssert_True(EA_AppData.HkTlm.usCmdErrCnt==0,"Command Error Count = 0");
 }
 
 /**
@@ -761,24 +664,24 @@ void Test_EA_ProcessNewAppCmds_StartApp_Nominal(void)
  */
 void Test_EA_ProcessNewAppCmds_StartApp_CreateChildTaskError(void)
 {
-	EA_StartCmd_t InStartCmd;
-
-	CFE_SB_InitMsg (&InStartCmd, EA_CMD_MID, sizeof(InStartCmd), TRUE);
-	strcpy(InStartCmd.interpreter, APP_PATH);
-	strcpy(InStartCmd.script, TEST_ARG);
-
-	/* Set to generate error message EA_CHILD_TASK_START_ERR_EID */
-    Ut_CFE_ES_SetReturnCode(UT_CFE_ES_CREATECHILDTASK_INDEX, -1, 1);
-
-	/* Execute the function being tested */
-	EA_StartApp((CFE_SB_MsgPtr_t)(&InStartCmd));
-
-	/* Verify results */
-	UtAssert_True(Ut_CFE_EVS_GetEventQueueDepth()==1,"Event Count = 1");
-	UtAssert_EventSent(EA_CHILD_TASK_START_ERR_EID, CFE_EVS_ERROR, "", "Child task failed to start");
-	UtAssert_True(EA_AppData.ChildAppTaskInUse==FALSE,"Child task in use set to false");
-	UtAssert_True(EA_AppData.ChildAppTaskID==0,"Child task ID not set");
-	UtAssert_True(EA_AppData.HkTlm.usCmdErrCnt==1,"Command Error Count = 1");
+//	EA_StartCmd_t InStartCmd;
+//
+//	CFE_SB_InitMsg (&InStartCmd, EA_CMD_MID, sizeof(InStartCmd), TRUE);
+//	strcpy(InStartCmd.interpreter, APP_PATH);
+//	strcpy(InStartCmd.script, TEST_ARG);
+//
+//	/* Set to generate error message EA_CHILD_TASK_START_ERR_EID */
+//    Ut_CFE_ES_SetReturnCode(UT_CFE_ES_CREATECHILDTASK_INDEX, -1, 1);
+//
+//	/* Execute the function being tested */
+//	EA_StartApp((CFE_SB_MsgPtr_t)(&InStartCmd));
+//
+//	/* Verify results */
+//	UtAssert_True(Ut_CFE_EVS_GetEventQueueDepth()==1,"Event Count = 1");
+//	UtAssert_EventSent(EA_CHILD_TASK_START_ERR_EID, CFE_EVS_ERROR, "", "Child task failed to start");
+//	UtAssert_True(EA_AppData.ChildAppTaskInUse==FALSE,"Child task in use set to false");
+//	UtAssert_True(EA_AppData.ChildAppTaskID==0,"Child task ID not set");
+//	UtAssert_True(EA_AppData.HkTlm.usCmdErrCnt==1,"Command Error Count = 1");
 }
 
 /**
@@ -808,7 +711,7 @@ void Test_EA_ProcessNewAppCmds_TermApp_RcvCmd(void)
     EA_AppMain();
 
     /* Verify results */
-    UtAssert_True(Ut_CFE_EVS_GetEventQueueDepth()==4,"Event Count = 4");
+    UtAssert_True(Ut_CFE_EVS_GetEventQueueDepth()==3,"Event Count = 3");
     UtAssert_EventSent(EA_CMD_INF_EID, CFE_EVS_INFORMATION, "Recvd Terminate App cmd (3)", "Recvd Terminate App cmd");
 }
 
@@ -897,7 +800,7 @@ void Test_EA_ProcessNewAppCmds_Perfmon_RcvCmd(void)
     EA_AppMain();
 
     /* Verify results */
-    UtAssert_True(Ut_CFE_EVS_GetEventQueueDepth()==3,"Event Count = 3");
+    UtAssert_True(Ut_CFE_EVS_GetEventQueueDepth()==2,"Event Count = 2");
     UtAssert_EventSent(EA_CMD_INF_EID, CFE_EVS_INFORMATION, "Recvd Perfmon cmd (4)", "Recvd Perfmon App cmd");
 }
 
@@ -985,8 +888,6 @@ void EA_App_Test_AddTestCases(void)
                "Test_EA_InitPipe_Fail_CreateCMDPipe");
     UtTest_Add(Test_EA_InitPipe_Fail_SubscribeCMD, EA_Test_Setup, EA_Test_TearDown,
                "Test_EA_InitPipe_Fail_SubscribeCMD");
-    UtTest_Add(Test_EA_InitPipe_Fail_CreateDATAPipe, EA_Test_Setup, EA_Test_TearDown,
-               "Test_EA_InitPipe_Fail_CreateDATAPipe");
 
     UtTest_Add(Test_EA_InitData, EA_Test_Setup, EA_Test_TearDown,
                "Test_EA_InitData");
@@ -997,10 +898,6 @@ void EA_App_Test_AddTestCases(void)
                "Test_EA_InitApp_Fail_InitPipe");
     UtTest_Add(Test_EA_InitApp_Fail_InitData, EA_Test_Setup, EA_Test_TearDown,
                "Test_EA_InitApp_Fail_InitData");
-    UtTest_Add(Test_EA_InitApp_Fail_InitConfigTbl, EA_Test_Setup, EA_Test_TearDown,
-               "Test_EA_InitApp_Fail_InitConfigTbl");
-    UtTest_Add(Test_EA_InitApp_Fail_InitCDSTbl, EA_Test_Setup, EA_Test_TearDown,
-               "Test_EA_InitApp_Fail_InitCDSTbl");
     UtTest_Add(Test_EA_InitApp_Nominal, EA_Test_Setup, EA_Test_TearDown,
                "Test_EA_InitApp_Nominal");
 
@@ -1008,16 +905,12 @@ void EA_App_Test_AddTestCases(void)
                "Test_EA_AppMain_Fail_RegisterApp");
     UtTest_Add(Test_EA_AppMain_Fail_InitApp, EA_Test_Setup, EA_Test_TearDown,
                "Test_EA_AppMain_Fail_InitApp");
-    UtTest_Add(Test_EA_AppMain_Fail_AcquireConfigPtrs, EA_Test_Setup, EA_Test_TearDown,
-               "Test_EA_AppMain_Fail_AcquireConfigPtrs");
     UtTest_Add(Test_EA_AppMain_InvalidSchMessage, EA_Test_Setup, EA_Test_TearDown,
                "Test_EA_AppMain_InvalidSchMessage");
     UtTest_Add(Test_EA_AppMain_Nominal_SendHK, EA_Test_Setup, EA_Test_TearDown,
                "Test_EA_AppMain_Nominal_SendHK");
     UtTest_Add(Test_EA_AppMain_Nominal_Wakeup, EA_Test_Setup, EA_Test_TearDown,
                "Test_EA_AppMain_Nominal_Wakeup");
-    //UtTest_Add(Test_EA_AppMain_ProcessNewData_InvalidMsgID, EA_Test_Setup, EA_Test_TearDown,
-     //          "Test_EA_AppMain_ProcessNewData_InvalidMsgID");
     UtTest_Add(Test_EA_ProcessNewAppCmds_InvalidCommand, EA_Test_Setup, EA_Test_TearDown,
                    "Test_EA_ProcessNewAppCmds_InvalidCommand");
     UtTest_Add(Test_EA_ProcessNewAppCmds_Noop_Nominal, EA_Test_Setup, EA_Test_TearDown,

@@ -45,17 +45,11 @@
 
 #include "ea_platform_cfg.h"
 #include "ea_mission_cfg.h"
-#include "ea_private_ids.h"
-#include "ea_private_types.h"
 #include "ea_perfids.h"
 #include "ea_msgids.h"
 #include "ea_msg.h"
 #include "ea_events.h"
-#include "ea_config_utils.h"
-#include "ea_cds_utils.h"
 #include "ea_custom.h"
-#include "ea_serialization.h"
-#include "ea_start.pb.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -64,12 +58,13 @@ extern "C" {
 /************************************************************************
 ** Local Defines
 *************************************************************************/
-#define EA_TIMEOUT_MSEC             	(1000)
-#define EA_START_APP_TASK_NAME            "EA_StartAppCustom"
+#define EA_TIMEOUT_MSEC           (1000)
+#define EA_START_APP_TASK_NAME    "EA_StartAppCustom"
 
 /************************************************************************
 ** Local Structure Definitions
 *************************************************************************/
+
 /**
 **  \brief EA Operational Data Structure
 */
@@ -84,37 +79,12 @@ typedef struct
     /** \brief Command Pipe ID */
     CFE_SB_PipeId_t  CmdPipeId;
 
-    /** \brief Data Pipe ID */
-    CFE_SB_PipeId_t  DataPipeId;
-
     /* Task-related */
 
     /** \brief Task Run Status */
     uint32  uiRunStatus;
 
     /* Config table-related */
-
-    /** \brief Config Table Handle */
-    CFE_TBL_Handle_t  ConfigTblHdl;
-
-    /** \brief Config Table Pointer */
-    EA_ConfigTblEntry_t*  ConfigTblPtr;
-
-    /* Critical Data Storage (CDS) table-related */
-
-    /** \brief CDS Table Handle */
-    CFE_ES_CDSHandle_t  CdsTblHdl;
-
-    /** \brief CDS Table data */
-    EA_CdsTbl_t  CdsTbl;
-
-    /* Inputs/Outputs */
-
-    /** \brief Input Data from I/O or other apps */
-    EA_InData_t   InData;
-
-    /** \brief Output Data published at the end of cycle */
-    EA_OutData_t  OutData;
 
     /**< \brief Flag for a child task in use */
     boolean  ChildAppTaskInUse;
@@ -130,7 +100,6 @@ typedef struct
 
     /** \brief Process info for external app */
     EA_ProcData_t ProcData;
-
 
 } EA_AppData_t;
 
@@ -186,7 +155,6 @@ void  EA_AppMain(void);
 **  \retstmt Return codes from #EA_InitPipe                \endcode
 **  \retstmt Return codes from #EA_InitData                \endcode
 **  \retstmt Return codes from #EA_InitConfigTbl           \endcode
-**  \retstmt Return codes from #EA_InitCdsTbl              \endcode
 **  \retstmt Return codes from #OS_TaskInstallDeleteHandler \endcode
 **  \endreturns
 **
@@ -337,18 +305,6 @@ void  EA_Perfmon(void);
 void  EA_ReportHousekeeping(void);
 
 /************************************************************************/
-/** \brief Sends EA output data
-**
-**  \par Description
-**       This function publishes the EA application output data.
-**
-**  \par Assumptions, External Events, and Notes:
-**       None
-**
-*************************************************************************/
-void  EA_SendOutData(void);
-
-/************************************************************************/
 /** \brief Verify Command Length
 **
 **  \par Description
@@ -367,19 +323,6 @@ void  EA_SendOutData(void);
 **
 *************************************************************************/
 boolean  EA_VerifyCmdLength(CFE_SB_Msg_t* MsgPtr, uint16 usExpectedLen);
-
-/************************************************************************/
-/** \brief Process any data EA has received
-**
-**  \par Description
-**       This function reads data from a pipe and 
-**       takes appropriate actions on it.
-**
-**  \par Assumptions, External Events, and Notes:
-**       None
-**
-*************************************************************************/
-void EA_ProcessNewData(void);
 
 /************************************************************************/
 /** \brief Process any commands EA has received
