@@ -31,7 +31,7 @@
 #
 #############################################################################
  
-add_airliner_app_def(ea
+buildliner_add_app_def(ea
     FILE EA
     SOURCES
         ${CMAKE_CURRENT_SOURCE_DIR}/../src/ea_app.c
@@ -52,7 +52,7 @@ add_airliner_app_def(ea
         ${PROJECT_SOURCE_DIR}/apps/ea/fsw/platform_inc
 )
 
-add_airliner_app_unit_test(ea-ut
+buildliner_add_app_unit_test(ea-ut
     UTASSERT 
         
     SOURCES
